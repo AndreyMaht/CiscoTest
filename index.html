@@ -1,0 +1,996 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Тренажёр: Компьютерные сети — 90 вопросов (Moodle УрФУ)</title>
+<style>
+:root{
+  --bg:#0b1120; --bg2:#121b2e; --card:#16203a; --card2:#1c2947;
+  --tx:#e8eefc; --mut:#94a3c4; --acc:#38bdf8; --acc2:#818cf8;
+  --ok:#34d399; --okbg:rgba(52,211,153,.13); --bad:#f87171; --badbg:rgba(248,113,113,.13);
+  --warn:#fbbf24; --line:rgba(148,163,196,.18);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:radial-gradient(1200px 700px at 15% -10%,#1b2a52 0%,var(--bg) 55%) fixed,var(--bg);
+ color:var(--tx);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+ -webkit-text-size-adjust:100%}
+.wrap{max-width:900px;margin:0 auto;padding:18px 16px 80px}
+code,kbd,.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+kbd{background:#0e1729;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:1px 6px;font-size:12px;color:var(--mut)}
+button{font:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* ---------- header ---------- */
+header{position:sticky;top:0;z-index:20;background:rgba(11,17,32,.86);backdrop-filter:blur(8px);
+ border-bottom:1px solid var(--line);padding:10px 0}
+.hin{max-width:900px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.logo{font-weight:700;letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+.logo .dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--acc),var(--acc2));box-shadow:0 0 12px var(--acc)}
+.hstats{display:flex;gap:8px;margin-left:auto;align-items:center;flex-wrap:wrap}
+.chip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:4px 11px;font-size:13px;color:var(--mut);white-space:nowrap}
+.chip b{color:var(--tx)}
+.chip.good b{color:var(--ok)} .chip.bad b{color:var(--bad)}
+.btn{background:var(--card2);border:1px solid var(--line);color:var(--tx);border-radius:12px;padding:9px 15px;
+ transition:.15s;font-weight:600}
+.btn:hover{border-color:var(--acc);transform:translateY(-1px)}
+.btn.pri{background:linear-gradient(135deg,#2563eb,#7c3aed);border-color:transparent}
+.btn.pri:hover{filter:brightness(1.12)}
+.btn.sm{padding:6px 11px;font-size:13px;border-radius:10px}
+.btn.gh{background:transparent}
+.btn:disabled{opacity:.38;cursor:not-allowed;transform:none;filter:none;border-color:var(--line)}
+.cnt{color:var(--mut);font-size:13.5px}
+.cnt b{color:var(--acc)}
+.btn.warn{background:#3a2a12;border-color:rgba(251,191,36,.4);color:#fde68a}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-5px)}40%,60%{transform:translateX(5px)}}
+.shake{animation:shake .5s both;border-color:var(--warn)!important}
+
+/* ---------- cards ---------- */
+.card{background:linear-gradient(180deg,var(--card),var(--bg2));border:1px solid var(--line);
+ border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 18px 40px -24px #000}
+h1{font-size:24px;margin:0 0 6px}
+h2{font-size:18px;margin:22px 0 10px}
+.sub{color:var(--mut);margin:0 0 4px}
+.hero{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.hero .big{font-size:40px;line-height:1;font-weight:800;background:linear-gradient(135deg,var(--acc),var(--acc2));
+ -webkit-background-clip:text;background-clip:text;color:transparent}
+.grid{display:grid;gap:10px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.mode{display:flex;flex-direction:column;gap:4px;text-align:left;background:var(--card2);border:1px solid var(--line);
+ border-radius:14px;padding:14px;color:var(--tx)}
+.mode:hover{border-color:var(--acc);background:#20305a}
+.mode b{font-size:15px}
+.mode span{color:var(--mut);font-size:13px;line-height:1.4}
+.mode .n{font-size:12px;color:var(--acc);font-weight:700}
+label.chk{display:flex;gap:8px;align-items:center;background:var(--card2);border:1px solid var(--line);
+ border-radius:10px;padding:8px 11px;font-size:14px;color:var(--mut);cursor:pointer}
+label.chk:hover{border-color:var(--acc2)}
+label.chk input{accent-color:var(--acc);width:16px;height:16px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.progress{height:6px;background:#0d1526;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,var(--acc),var(--acc2));width:0;transition:width .3s}
+
+/* ---------- question ---------- */
+.qmeta{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.tag{font-size:12px;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--mut);background:#0e1729}
+.tag.m{border-color:rgba(129,140,248,.5);color:#c7d2fe}
+.tag.i{border-color:rgba(251,191,36,.45);color:#fde68a}
+.qtext{font-size:19px;font-weight:600;margin:6px 0 16px;line-height:1.45}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;gap:12px;align-items:flex-start;background:var(--card2);border:1px solid var(--line);
+ border-radius:13px;padding:12px 14px;cursor:pointer;transition:.13s;text-align:left;color:var(--tx);width:100%}
+.opt:hover:not(.dis){border-color:var(--acc);background:#213159;transform:translateX(2px)}
+.opt .box{flex:0 0 22px;height:22px;border-radius:7px;border:2px solid #44537a;margin-top:1px;
+ display:flex;align-items:center;justify-content:center;font-size:13px;color:#0b1120;font-weight:800}
+.opt.multi .box{border-radius:50%}
+.opt.sel{border-color:var(--acc);background:#1d2f57}
+.opt.sel .box{background:var(--acc);border-color:var(--acc)}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.right .box{background:var(--ok);border-color:var(--ok)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt.wrong .box{background:var(--bad);border-color:var(--bad)}
+.opt.dis{cursor:default;opacity:.92}
+.opt .kbd{margin-left:auto;color:#5b6c92;font-size:12px;font-weight:700;align-self:center}
+.inp{width:100%;background:#0e1729;border:1px solid var(--line);border-radius:12px;padding:13px;color:var(--tx);font-size:17px}
+.inp:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px rgba(56,189,248,.18)}
+.inp.right{border-color:var(--ok);background:var(--okbg)}
+.inp.wrong{border-color:var(--bad);background:var(--badbg)}
+.fb{margin-top:14px;border-radius:13px;padding:13px 15px;border:1px solid var(--line);display:none}
+.fb.show{display:block;animation:pop .22s ease-out}
+.fb.ok{background:var(--okbg);border-color:rgba(52,211,153,.45)}
+.fb.bad{background:var(--badbg);border-color:rgba(248,113,113,.45)}
+.fb h4{margin:0 0 6px;font-size:15px}
+.fb.ok h4{color:var(--ok)} .fb.bad h4{color:var(--bad)}
+.fb p{margin:0;color:#d6e0f5;font-size:14.5px}
+.fb .ans{margin:6px 0 0;font-size:14px;color:var(--mut)}
+.fb .ans b{color:var(--tx)}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.nav{display:flex;gap:10px;margin-top:16px;align-items:center;flex-wrap:wrap}
+.nav .sp{margin-left:auto;color:var(--mut);font-size:13px}
+
+/* ---------- table ---------- */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mut);font-weight:600;font-size:12.5px;text-transform:uppercase;letter-spacing:.4px}
+tr:hover td{background:rgba(56,189,248,.05)}
+td.num{color:var(--acc);font-weight:700;width:44px}
+.tblwrap{max-height:62vh;overflow:auto;border:1px solid var(--line);border-radius:14px}
+.dotmark{display:inline-block;width:9px;height:9px;border-radius:50%}
+.dm-ok{background:var(--ok)} .dm-bad{background:var(--bad)} .dm-new{background:#3b4a6b}
+.pill{font-size:11px;padding:2px 7px;border-radius:99px;background:#0e1729;border:1px solid var(--line);color:var(--mut)}
+.search{width:100%;background:#0e1729;border:1px solid var(--line);border-radius:12px;padding:11px 13px;color:var(--tx);font-size:15px;margin-bottom:10px}
+.search:focus{outline:none;border-color:var(--acc)}
+.score-big{font-size:56px;font-weight:800;line-height:1}
+.note{font-size:13px;color:var(--mut);border-left:3px solid var(--acc2);padding-left:10px;margin:10px 0}
+.foot{color:#5b6c92;font-size:12.5px;text-align:center;margin-top:26px}
+@media (max-width:640px){
+  .qtext{font-size:17px} .card{padding:16px;border-radius:15px} .wrap{padding:12px 10px 70px}
+  .score-big{font-size:44px} .opt .kbd{display:none}
+}
+</style>
+</head>
+<body>
+<header><div class="hin">
+  <div class="logo"><span class="dot"></span>Сети · тренажёр <span class="pill" id="modeName">90 вопросов</span></div>
+  <div class="hstats">
+    <span class="chip" id="chipProg">—</span>
+    <span class="chip good" id="chipOk">верно <b>0</b></span>
+    <span class="chip bad" id="chipBad">ошибок <b>0</b></span>
+    <button class="btn sm pri hidden" id="btnFinishTop">Завершить ✓</button>
+    <button class="btn sm gh" id="btnRef">📋 Все ответы</button>
+    <button class="btn sm gh" id="btnHome">⌂ Меню</button>
+  </div>
+</div></header>
+<div class="wrap">
+
+<!-- ============ MENU ============ -->
+<section id="scr-menu">
+  <div class="card">
+    <div class="hero">
+      <div class="big" id="statPct">—</div>
+      <div style="flex:1;min-width:220px">
+        <h1>Компьютерные сети — тренажёр</h1>
+        <p class="sub">Все <b>90 вопросов</b> твоего теста в Moodle (УрФУ, CCNA 1 v7). Ответы сверены с официальным банком NetAcad.</p>
+        <p class="sub" id="statLine">Прогресс пока не начат.</p>
+      </div>
+    </div>
+    <div class="progress" style="margin-top:12px"><i id="menuBar"></i></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Режим тренировки</h2>
+    <div class="grid g2">
+      <button class="mode" data-mode="train"><b>🎓 Тренировка</b><span>Ответ → сразу проверка и пояснение. Лучший режим для изучения.</span><span class="n" id="cntTrain"></span></button>
+      <button class="mode" data-mode="exam"><b>⏱ Экзамен</b><span>Все 90 вопросов подряд, без пояснений. Результат — в конце, как в Moodle.</span><span class="n">90 вопросов · оценка ≥ 70%</span></button>
+      <button class="mode" data-mode="rand"><b>🔀 Случайные 30</b><span>Быстрый прогон вперемешку — то, как их и вытянет Moodle.</span><span class="n">30 вопросов</span></button>
+      <button class="mode" data-mode="wrong"><b>❌ Работа над ошибками</b><span>Только те, где ты ошибся. Список хранится в браузере.</span><span class="n" id="cntWrong"></span></button>
+      <button class="mode" data-mode="img"><b>🖼 Вопросы с рисунком</b><span>Задания, где на экзамене будет exhibit: правила решения вместо картинки.</span><span class="n" id="cntImg"></span></button>
+      <button class="mode" data-mode="input"><b>⌨️ Ввод ответа</b><span>Вопросы с полем ввода (BYOD, LLC, /60, show version, GET).</span><span class="n" id="cntInput"></span></button>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <label class="chk"><input type="checkbox" id="optShuffle" checked> Перемешивать варианты</label>
+      <label class="chk"><input type="checkbox" id="optHideImg"> Скрыть вопросы с рисунком</label>
+      <button class="btn sm" id="btnLast">⚡ Последняя минута</button>
+      <button class="btn gh sm" id="btnReset">🗑 Сбросить прогресс</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0">Темы</h2>
+    <div class="grid g3" id="catGrid"></div>
+  </div>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="scr-quiz" class="hidden">
+  <div class="card">
+    <div class="progress" style="margin-bottom:14px"><i id="qBar"></i></div>
+    <div class="qmeta" id="qMeta"></div>
+    <div class="qtext" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+    <div id="qInput" class="hidden">
+      <input class="inp" id="inp" autocomplete="off" placeholder="Введи ответ…">
+      <div class="nav"><button class="btn pri" id="btnCheck">Проверить</button>
+      <span class="sp">Ответ проверяется без учёта регистра и лишних пробелов</span></div>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="nav" id="qNav">
+      <button class="btn gh" id="btnPrev">← Назад</button>
+      <button class="btn pri hidden" id="btnAnswer">Ответить ✓</button>
+      <span class="cnt" id="cntSel"></span>
+      <button class="btn warn sm hidden" id="btnGiveup">Не знаю — показать ответ</button>
+      <button class="btn pri hidden" id="btnNext">Дальше →</button>
+      <button class="btn pri hidden" id="btnFinish">Завершить и посмотреть результат</button>
+      <span class="sp" id="qCount"></span>
+    </div>
+  </div>
+  <p class="note">Горячие клавиши: <kbd>1</kbd>–<kbd>6</kbd> — выбрать вариант, <kbd>Enter</kbd> — проверить / дальше, <kbd>←</kbd> <kbd>→</kbd> — навигация, <kbd>Esc</kbd> — меню.</p>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section id="scr-result" class="hidden">
+  <div class="card" style="text-align:center">
+    <div class="score-big" id="rPct">0%</div>
+    <p class="sub" id="rVerdict" style="font-size:17px;margin-top:8px"></p>
+    <div class="row" style="justify-content:center;margin-top:14px">
+      <span class="chip good">верно <b id="rOk">0</b></span>
+      <span class="chip bad">ошибок <b id="rBad">0</b></span>
+      <span class="chip">всего <b id="rAll">0</b></span>
+    </div>
+    <div class="row" style="justify-content:center;margin-top:18px">
+      <button class="btn pri" id="rAgain">Пройти ещё раз</button>
+      <button class="btn" id="rWrong">❌ Разобрать ошибки</button>
+      <button class="btn gh" id="rHome">⌂ В меню</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2 style="margin-top:0">Разбор</h2>
+    <div id="rList"></div>
+  </div>
+</section>
+
+<!-- ============ LAST MINUTE ============ -->
+<section id="scr-last" class="hidden">
+  <div class="card">
+    <h2 style="margin-top:0">⚡ Последняя минута перед тестом</h2>
+    <p class="sub">Три таблицы, которые стоит пролистать за 15 минут до старта. Ничего нового — только то, что уже разобрано.</p>
+
+    <h2>🧮 Числа, которые надо знать наизусть</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Что</th><th>Значение</th></tr></thead><tbody>
+      <tr><td>Маска → полезных хостов</td><td><code>2^(32−префикс) − 2</code></td></tr>
+      <tr><td>/28 · /27 · /26 · /24 · /22</td><td>14 · 30 · 62 · 254 · 1022 хоста</td></tr>
+      <tr><td>/28 · /27 · /26 · /24 · /22 · /20</td><td>255.255.255.240 · .224 · .192 · .0 · 255.255.252.0 · 255.255.240.0</td></tr>
+      <tr><td>«Одна маска для всех сетей»</td><td>считать по самой крупной сети (22 хоста → /27)</td></tr>
+      <tr><td>Кадр Ethernet</td><td>64 … 1518 байт</td></tr>
+      <tr><td>Порты</td><td>well-known 0–1023 · registered 1024–49151 · dynamic 49152–65535</td></tr>
+      <tr><td>MAC-адрес</td><td>48 бит: первые 24 = OUI (IEEE), последние 24 = номер платы</td></tr>
+      <tr><td>Частные IPv4</td><td>10.0.0.0/8 · 172.16.0.0/12 · 192.168.0.0/16</td></tr>
+      <tr><td>Broadcast IPv4 всех сетей</td><td>255.255.255.255 · ARP-запрос идёт на MAC FFFF.FFFF.FFFF</td></tr>
+      <tr><td>IPv6: GUA · ULA · link-local · multicast · loopback</td><td>2000::/3 · FC00::/7 · FE80::/10 · FF00::/8 · ::1</td></tr>
+      <tr><td>Префикс IPv6 /64 · /60</td><td>первые 4 группы · общая часть <code>2001:DB8:BC15:00A</code></td></tr>
+      <tr><td>PDU по уровням</td><td>биты → кадр → пакет → сегмент → данные</td></tr>
+      </tbody></table></div>
+
+    <h2>🖼 Правила для 9 вопросов с рисунком</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>№</th><th>Правило</th></tr></thead><tbody>
+      <tr><td class="num">60</td><td>В <b>пакет</b> — IP конечного получателя (ServerB). В <b>кадр</b> — MAC своего шлюза (RouterA).</td></tr>
+      <tr><td class="num">61</td><td>Самая специфичная запись → next hop → второй поиск по таблице → выходной интерфейс.</td></tr>
+      <tr><td class="num">62</td><td>Провод = <b>CSMA/CD</b> (обнаружение коллизий), Wi-Fi = <b>CSMA/CA</b> (предотвращение).</td></tr>
+      <tr><td class="num">63</td><td>Та же сеть → запись <b>On-link</b>; другая сеть → <b>0.0.0.0/0 → шлюз</b>. Никогда 127.0.0.1 и не свой /32.</td></tr>
+      <tr><td class="num">65</td><td>MAC получателя нет в таблице → лавина <b>во все порты, кроме входного</b>.</td></tr>
+      <tr><td class="num">66</td><td>Статус интерфейсов + IP одной командой → <code>show ip interface brief</code>; версия IOS / config register → <code>show version</code>; MAC-таблица → <code>show mac-address-table</code>.</td></tr>
+      <tr><td class="num">67</td><td>/27 = 32 адреса, 30 полезных. (30 − занятых) × число подсетей.</td></tr>
+      <tr><td class="num">68</td><td>Обжимка RJ-45: <b>расплетённые жилы слишком длинные</b>, оболочка не зажата в разъёме.</td></tr>
+      <tr><td class="num">87</td><td>Запрос к серверу имён = <b>nslookup</b>. <code>ipconfig /displaydns</code> — только локальный кэш.</td></tr>
+      </tbody></table></div>
+
+    <h2>⚠️ 8 ловушек, на которых теряют баллы</h2>
+    <div class="tblwrap"><table>
+      <thead><tr><th>№</th><th>Ловушка → правильно</th></tr></thead><tbody>
+      <tr><td class="num">3</td><td>«бо́льшая пропускная способность / невосприимчив к EMI» → в этом вопросе верно <b>«передаёт сигналы на гораздо бо́льшие расстояния»</b></td></tr>
+      <tr><td class="num">11</td><td>«адресное пространство IPv6 в 4 раза больше» ✗ → <b>заголовок IPv6 проще → лучше обработка пакетов</b></td></tr>
+      <tr><td class="num">14</td><td>«генерируют данные», «интерфейс между людьми и сетью» ✗ (это конечные устройства) → <b>направляют путь данных</b> + <b>соединяют хосты с сетью</b></td></tr>
+      <tr><td class="num">16</td><td>«два шага» → hostname + ip domain-name, ключи RSA. «три шага, учётка уже есть» → domain-name + ключи + <code>transport input ssh</code></td></tr>
+      <tr><td class="num">42</td><td>Префикс — <b>2001:DB8:BC15:A</b>, а не <code>::/64</code> в конце (автопроверка строки)</td></tr>
+      <tr><td class="num">54</td><td><code>ipconfig</code> — сетевые настройки · <code>route print</code> — маршруты · <code>tracert</code> — путь · <code>arp -a</code> — ARP · <code>ipconfig /displaydns</code> — кэш DNS</td></tr>
+      <tr><td class="num">56</td><td>Ключ v5.1/v6.0 — <b>«передающий узел вставляет стартовые и стоповые биты»</b>; если вместо него вариант про преамбулу/SFD или кодирование — бери его (версия v7)</td></tr>
+      <tr><td class="num">29</td><td>«отправляется всем хостам» ✗ — это broadcast. Multicast: группе подписчиков, маршрутизаторы обмениваются маршрутами, хосты явно присоединяются</td></tr>
+      </tbody></table></div>
+
+    <div class="row" style="margin-top:14px"><button class="btn gh" id="lastBack">← Назад в меню</button>
+    <button class="btn" id="lastRef">📋 Все 90 ответов</button></div>
+  </div>
+</section>
+
+<!-- ============ TRAPS ============ -->
+<section id="scr-traps" class="hidden">
+  <div class="card">
+    <h2 style="margin-top:0">🪤 Альтернативные формулировки</h2>
+    <p class="sub">Тот же вопрос в тесте может прийти в другой редакции (банк v5.1/v6.0 против v7, или вариант «выбери три» вместо «выбери два»). Ниже — пары «формулировка → ответ». Прочитай один раз: если завтра увидишь незнакомую редакцию, она уже будет знакомой.</p>
+    <input class="search" id="trapSearch" placeholder="Поиск по формулировке или ответу…">
+    <div id="trapList"></div>
+    <div class="row" style="margin-top:14px"><button class="btn gh" id="trapBack">← Назад в меню</button></div>
+  </div>
+</section>
+
+<!-- ============ REFERENCE ============ -->
+<section id="scr-ref" class="hidden">
+  <div class="card">
+    <h2 style="margin-top:0">📋 Все 90 ответов</h2>
+    <input class="search" id="refSearch" placeholder="Поиск по номеру, теме или тексту…">
+    <div class="row" style="margin-bottom:10px">
+      <button class="btn sm gh" data-f="all">Все</button>
+      <button class="btn sm gh" data-f="wrong">С ошибками</button>
+      <button class="btn sm gh" data-f="new">Не отвеченные</button>
+      <button class="btn sm gh" data-f="img">🖼 С рисунком</button>
+    </div>
+    <div class="tblwrap"><table id="refTbl"><thead><tr>
+      <th>№</th><th>Вопрос</th><th>Правильный ответ</th><th></th></tr></thead><tbody></tbody></table></div>
+    <div class="row" style="margin-top:14px"><button class="btn gh" id="refBack">← Назад</button></div>
+  </div>
+</section>
+
+<p class="foot">Ответы сверены с банком Cisco NetAcad CCNA 1 «Introduction to Networks v7.0» (модульные викторины, Checkpoint-экзамены, Practice Final и Course Final).<br>
+Прогресс сохраняется локально в браузере (localStorage). Файл автономный — работает без интернета.</p>
+</div>
+
+<script>
+const QUESTIONS = [
+{id:1, cat:"Транспортный уровень", q:"Во время сеанса TCP целевое устройство отправляет номер подтверждения исходному устройству. Что означает этот номер подтверждения?",
+ opts:["Номер последовательности последнего полученного сегмента","Следующий байт, который целевое устройство ожидает получить","Общее число байтов, полученных за сеанс","Номер последнего отправленного пакета"], ok:[1],
+ ex:"Номер подтверждения (ACK) = порядковый номер следующего байта, который ожидает получить получатель. Он подтверждает всё, что получено до этого."},
+{id:2, cat:"Прикладной уровень", q:"В чём преимущество для небольших организаций использования IMAP вместо POP?",
+ opts:["POP хранит сообщения централизованно, а IMAP — распределённо","Сообщения хранятся на почтовых серверах, пока не будут удалены вручную из клиента","При подключении к POP копии сообщений хранятся на сервере долго, а IMAP — коротко","IMAP отправляет и получает почту, а POP только получает"], ok:[1],
+ ex:"IMAP оставляет письма на сервере до ручного удаления — удобно, когда доступ идёт с нескольких устройств. Тема 15.3.4."},
+{id:3, cat:"Физический уровень", q:"В чём одно из преимуществ оптоволоконного кабеля перед медным?",
+ opts:["Он обычно дешевле медного","Его можно прокладывать с резкими изгибами","Он проще в оконцовке и монтаже","Он способен передавать сигналы на гораздо большие расстояния, чем медный"], ok:[3],
+ ex:"Медь дешевле и проще в монтаже, но оптика имеет значительно большую дальность передачи без повторителей. Тема 4.5.1."},
+{id:4, cat:"Адресация IPv4", q:"Если сетевое устройство имеет маску /28, сколько IP-адресов доступно для назначения узлам (хостам) в этой подсети?",
+ opts:["256","254","62","32","16","14"], ok:[5],
+ ex:"/28 = 255.255.255.240 → 4 бита на хост → 16 адресов − 2 (сеть и броадкаст) = 14. Тема 11.5.2."},
+{id:5, cat:"Базовая настройка", q:"Зачем коммутатору уровня 2 нужен IP-адрес?",
+ opts:["Чтобы отправлять широковещательные кадры подключённым ПК","Чтобы работать шлюзом по умолчанию","Чтобы коммутатором можно было управлять удалённо","Чтобы получать кадры от подключённых ПК"], ok:[2],
+ ex:"L2-коммутатор пересылает кадры по MAC-адресам, IP ему для этого не нужен. Но для удалённого управления (SSH/Telnet/Web) нужен L3-адрес на SVI. Тема 2.6.2."},
+{id:6, cat:"Адресация IPv6", multi:3, q:"Из каких трёх частей состоит глобальный одноадресный (global unicast) адрес IPv6? (Выберите три.)",
+ opts:["Interface ID, который определяет локальную сеть конкретного узла","Глобальный префикс маршрутизации, выданный провайдером (идентифирует сетевую часть)","Subnet ID — идентификатор подсети внутри локального предприятия","Глобальный префикс, выданный локальным администратором","Interface ID — идентификатор узла в локальной сети"], ok:[1,2,4],
+ ex:"GUA = Global Routing Prefix (от ISP) + Subnet ID (от организации) + Interface ID (узел). Тема 12.3.5."},
+{id:7, cat:"Транспортный уровень", q:"Какая информация используется TCP для повторной сборки и изменения порядка полученных сегментов?",
+ opts:["Номера портов","Порядковые номера (sequence numbers)","Номера подтверждений","Номера фрагментов"], ok:[1],
+ ex:"TCP использует номера последовательности в заголовке сегмента, чтобы собрать данные в правильном порядке. Тема 14.6.1."},
+{id:8, cat:"Базовая настройка", q:"Какая команда позволяет пользователю вернуться на один уровень выше в иерархии режимов CLI (например, из режима настройки интерфейса в режим глобальной конфигурации)?",
+ opts:["end","exit","Ctrl-Z","Ctrl-C"], ok:[1],
+ ex:"exit — на один уровень выше. end и Ctrl-Z — сразу в привилегированный EXEC. Ctrl-C — прерывает ввод команды. Тема 2.2.4."},
+{id:9, cat:"Адресация IPv4", q:"Какая маска подсети представлена обозначением /20?",
+ opts:["255.255.255.248","255.255.224.0","255.255.240.0","255.255.255.0","255.255.255.192"], ok:[2],
+ ex:"/20 = 20 единиц: 11111111.11111111.11110000.0000 = 255.255.240.0. Тема 11.6.1."},
+{id:10, cat:"Базовая настройка", q:"Какая процедура используется для доступа к коммутатору Cisco 2960 при первоначальной настройке (out-of-band)?",
+ opts:["Подключиться по Telnet к интерфейсу VLAN 1","Подключиться консольным кабелем к консольному порту и использовать эмулятор терминала (например, PuTTY)","Подключиться по SSH к интерфейсу FastEthernet 0/1","Использовать веб-браузер и IP-адрес 192.168.1.1"], ok:[1],
+ ex:"Out-of-band = вне полосы сети: консольный порт + эмулятор терминала. Сетевых настроек на новом коммутаторе ещё нет."},
+{id:11, cat:"Сетевой уровень", q:"Какая характеристика описывает улучшение IPv6 по сравнению с IPv4?",
+ opts:["IPv6 использует 128-битную плоскую адресацию, а IPv4 — 32-битную иерархическую","Заголовок IPv6 проще, чем заголовок IPv4, что улучшает обработку пакетов","И IPv4, и IPv6 поддерживают аутентификацию, но только IPv6 — конфиденциальность","Адресное пространство IPv6 в четыре раза больше, чем у IPv4"], ok:[1],
+ ex:"Заголовок IPv6 упрощён (меньше полей) → быстрее обработка. Ловушка: адресное пространство больше не в 4 раза, а в 2⁹⁶ раз. Тема 8.3.2."},
+{id:12, cat:"Сетевой уровень", q:"Какая характеристика описывает шлюз по умолчанию хост-компьютера?",
+ opts:["Логический адрес интерфейса маршрутизатора в той же сети, что и хост","Физический адрес интерфейса коммутатора, к которому подключён хост","Физический адрес интерфейса маршрутизатора в той же сети, что и хост","Логический адрес, назначенный интерфейсу коммутатора, подключённому к маршрутизатору"], ok:[0],
+ ex:"Шлюз по умолчанию = IP-адрес (логический) интерфейса маршрутизатора в той же сети, что и отправитель. Тема 10.3.1."},
+{id:13, cat:"Малая сеть / QoS", multi:2, q:"Какие два типа трафика чувствительны к задержке доставки? (Выберите два.)",
+ opts:["Электронная почта","Веб-трафик","Передача файлов (FTP)","Голос (VoIP)","Видео"], ok:[3,4],
+ ex:"Голос и видео — трафик реального времени, им нужен приоритет (QoS). Почта, веб и FTP терпят задержки. Тема 17.1.5."},
+{id:14, cat:"Протоколы и модели", multi:2, q:"Какие два утверждения описывают промежуточные устройства? (Выберите два.)",
+ opts:["Они инициируют процесс инкапсуляции","Они управляют потоками данных по мере их движения по сети","Они генерируют содержимое данных","Они определяют пути для сообщений на основе топологии сети","Они являются интерфейсом между людьми и сетью связи"], ok:[1,3],
+ ex:"Промежуточные устройства (маршрутизатор, коммутатор, точка доступа) направляют поток и выбирают путь. Всё остальное — функции конечных устройств."},
+{id:15, cat:"Транспортный уровень", multi:2, q:"Какие два флага в заголовке TCP используются в трёхстороннем рукопожатии для установки соединения? (Выберите два.)",
+ opts:["ACK","FIN","PSH","RST","SYN","URG"], ok:[0,4],
+ ex:"SYN → SYN+ACK → ACK. Тема 14.5.4."},
+{id:16, cat:"Безопасность", multi:2, q:"Какие два шага необходимы для включения SSH на маршрутизаторе Cisco? (Выберите два.)",
+ opts:["Настроить уникальное имя устройства (hostname) и имя IP-домена (ip domain-name)","Сгенерировать криптографические ключи RSA командой crypto key generate rsa","Настроить пароль enable secret","Создать VLAN для управления","Включить transport input telnet"], ok:[0,1],
+ ex:"Без hostname и ip domain-name команда crypto key generate rsa не сработает. Если в вопросе три шага и «учётная запись уже создана» → domain-name + ключи RSA + transport input ssh."},
+{id:17, cat:"Маршрутизаторы", multi:2, q:"Какие существуют два типа интерфейсов маршрутизатора? (Выберите два.)",
+ opts:["Интерфейсы LAN","Интерфейсы WAN","Интерфейсы SVI","Интерфейсы loopback","Виртуальные интерфейсы VLAN"], ok:[0,1],
+ ex:"Два основных типа: LAN (локальная сеть) и WAN (глобальная сеть)."},
+{id:18, cat:"Адресация IPv6", multi:2, q:"Какие существуют два типа одноадресных (unicast) адресов IPv6? (Выберите два.)",
+ opts:["multicast","loopback","link-local","anycast","broadcast"], ok:[1,2],
+ ex:"Loopback (::1) и link-local (FE80::/10) — разновидности unicast. Броадкаста в IPv6 нет вообще. Тема 12.3.3."},
+{id:19, cat:"Адресация IPv4", multi:3, q:"Какие три IP-адреса/диапазона являются частными (private)? (Выберите три.)",
+ opts:["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","100.64.0.0/14","169.254.0.0/16","239.0.0.0/8"], ok:[0,1,2],
+ ex:"RFC 1918: 10/8, 172.16/12, 192.168/16. 169.254/16 — это APIPA (link-local), 100.64/14 — CGNAT, 239/8 — multicast."},
+{id:20, cat:"Протоколы и модели", multi:3, q:"Какие три уровня модели OSI сопоставимы по функциям с прикладным уровнем модели TCP/IP? (Выберите три.)",
+ opts:["Представления (presentation)","Физический","Сетевой","Канальный","Транспортный","Прикладной (application)","Сеансовый (session)"], ok:[0,5,6],
+ ex:"Верхние три уровня OSI (application, presentation, session) = один прикладной уровень TCP/IP. Тема 3.5.4."},
+{id:21, cat:"Безопасность", q:"Как команда service password-encryption повышает безопасность паролей на маршрутизаторах и коммутаторах Cisco?",
+ opts:["Она настраивается в привилегированном режиме EXEC","Она шифрует только пароли линейных интерфейсов","Она шифрует пароли, которые хранятся в конфигурационных файлах открытым текстом","Чтобы увидеть их снова, нужно выполнить no service password-encryption"], ok:[2],
+ ex:"Команда шифрует все пароли в конфигурации (plaintext), защищая их от просмотра при показе конфига. Тема 10.1.2."},
+{id:22, cat:"Базовая настройка", q:"Какова цель выдачи команд cd nvram: и затем dir в привилегированном режиме EXEC маршрутизатора?",
+ opts:["Вывести список содержимого NVRAM","Показать текущую конфигурацию в RAM","Вывести список файлов IOS во flash-памяти","Показать базу данных VLAN"], ok:[0],
+ ex:"cd nvram: + dir — просмотр файловой системы NVRAM (там лежит startup-config)."},
+{id:23, cat:"Базовая настройка", q:"Какова цель файла стартовой конфигурации (startup-config) на маршрутизаторе Cisco?",
+ opts:["Содержит параметры, используемые устройством при обычной работе прямо сейчас","Хранится в RAM и теряется при перезагрузке","Сохранить параметры конфигурации для использования при следующем включении или перезагрузке","Используется для диагностики загрузки IOS"], ok:[2],
+ ex:"startup-config лежит в NVRAM и загружается при старте. Текущая (running-config) — в RAM."},
+{id:24, cat:"Транспортный уровень", q:"Каков полный диапазон общеизвестных (well-known) портов TCP и UDP?",
+ opts:["от 0 до 255","от 0 до 1023","от 256 до 1023","от 1024 до 49151"], ok:[1],
+ ex:"Well-known: 0–1023; registered: 1024–49151; dynamic/private: 49152–65535. Тема 14.4.3."},
+{id:25, cat:"Коммутация Ethernet", q:"Каков результат соединения двух или более коммутаторов вместе?",
+ opts:["Размер широковещательного домена увеличивается","Размер широковещательного домена уменьшается","Количество коллизионных доменов уменьшается","Широковещательные домены объединяются только при наличии маршрутизатора"], ok:[0],
+ ex:"Каждый порт коммутатора — отдельный коллизионный домен, но все порты (и все соединённые коммутаторы) — один широковещательный домен. Домен растёт."},
+{id:26, cat:"Канальный уровень", multi:2, q:"Каковы два размера (минимальный и ожидаемый максимальный) кадра Ethernet? (Выберите два.)",
+ opts:["56 байт","64 байта","128 байт","1024 байта","1518 байт"], ok:[1,4],
+ ex:"Минимум 64 байта (меньше — runt), максимум 1518 байт (больше — jumbo/giant). Тема 7.1.3."},
+{id:27, cat:"Протоколы и модели", multi:2, q:"Каковы две функции конечных устройств сети? (Выберите два.)",
+ opts:["Они создают (генерируют) данные, которые передаются по сети","Они направляют данные по альтернативным путям при отказе канала","Они фильтруют поток данных для повышения безопасности","Они являются интерфейсом между людьми и сетью связи","Они предоставляют канал, по которому передаётся сообщение"], ok:[0,3],
+ ex:"Конечные устройства = источник данных и интерфейс «человек ↔ сеть». Направление по альтернативным путям и фильтрация — промежуточные устройства, канал — среда передачи. Тема 1.2.3."},
+{id:28, cat:"Базовая настройка", multi:2, q:"Каковы две характеристики оперативной памяти (RAM) на промежуточном устройстве Cisco? (Выберите два.)",
+ opts:["RAM обеспечивает энергонезависимое хранение","Активно работающая конфигурация устройства хранится в RAM","Содержимое RAM теряется при выключении питания","RAM есть только в коммутаторах, но не в маршрутизаторах","RAM может хранить несколько версий IOS и конфигурационных файлов"], ok:[1,2],
+ ex:"RAM — энергозависимая память: хранит running-config, таблицы маршрутизации, ARP-кэш; при перезагрузке содержимое теряется. IOS хранится во flash. Тема 2.5.1."},
+{id:29, cat:"Сетевой уровень", multi:3, q:"Каковы три характеристики многоадресной (multicast) передачи? (Выберите три.)",
+ opts:["Один пакет может быть отправлен группе хостов","Пакет отправляется всем хостам в широковещательном домене","Маршрутизаторы используют multicast для обмена маршрутной информацией","Требуется подтверждение от каждого получателя","Хосты должны явно присоединиться к многоадресной группе (например, через IGMP/MLD)"], ok:[0,2,4],
+ ex:"Multicast = один источник → группа подписчиков (IGMP/MLD): хосты явно присоединяются к группе, подтверждения не требуются. Маршрутные протоколы активно используют multicast (OSPF 224.0.0.5/6, EIGRP 224.0.0.10, RIPng FF02::9). Отправка ВСЕМ хостам — это broadcast, не multicast. ⚠️ Третий пункт в твоём docx звучал как «диапазон 224.0.0.0–224.0.0.255 зарезервирован для многоадресных групп в локальной сети» — это верно по факту (link-local multicast), но в официальном ключе v7 третий пункт обычно про обмен маршрутной информацией или про присоединение к группе. Если на экзамене есть вариант про 224.0.0.x — он тоже подходит."},
+{id:30, cat:"Сетевой уровень", q:"Какое поле заголовка IPv4 идентифицирует протокол верхнего уровня, содержащийся в пакете?",
+ opts:["Protocol","Identification","Version","Differentiated Services"], ok:[0],
+ ex:"Поле Protocol (6 = TCP, 17 = UDP, 1 = ICMP). Version — версия IP, Differentiated Services — приоритет, Identification — для фрагментов. Тема 8.2.2."},
+{id:31, cat:"ICMP", q:"Содержимое какого поля используется ICMPv6, чтобы определить, что срок действия пакета истёк?",
+ opts:["Поле TTL","Поле CRC","Поле Hop Limit","Поле Time Exceeded"], ok:[2],
+ ex:"В IPv6 нет TTL — есть Hop Limit. Когда он становится 0, маршрутизатор отправляет ICMPv6 Time Exceeded. Тема 13.1.4."},
+{id:32, cat:"Малая сеть", q:"Какое соображение при проектировании сети важнее для крупной корпорации, чем для малого бизнеса?",
+ opts:["Маршрутизатор для доступа в Интернет","Межсетевой экран","Коммутатор с низкой портовой плотностью","Избыточность (redundancy)"], ok:[3],
+ ex:"Интернет-маршрутизатор, коммутатор и firewall нужны всем, а резервирование каналов и устройств — признак крупного предприятия. Тема 17.1.4."},
+{id:33, cat:"Коммутация Ethernet", q:"Какое утверждение о MAC-адресах верно?",
+ opts:["MAC-адреса реализуются программно","MAC-адрес нужен сетевой плате только при подключении к WAN","Первые три байта содержат назначенный производителю идентификатор OUI","За регулирование MAC-адресов отвечает ISO"], ok:[2],
+ ex:"MAC = 6 байт: первые 3 — OUI (выдаёт IEEE), последние 3 — уникальный номер устройства. Реализован аппаратно, нужен для LAN. Тема 7.2.2."},
+{id:34, cat:"Коммутация Ethernet", q:"Какое утверждение описывает характеристику MAC-адресов?",
+ opts:["Они должны быть глобально уникальными","Они маршрутизируются только внутри частной сети","Они добавляются как часть PDU уровня 3","Они имеют 32-битное двоичное значение"], ok:[0],
+ ex:"Каждый производитель регистрирует в IEEE уникальный 24-битный код (OUI) → глобальная уникальность. MAC — 48 бит, работает на уровне 2 и не маршрутизируется. Тема 7.2.2."},
+{id:35, cat:"Сети сегодня", q:"Какое утверждение описывает характеристику облачных вычислений?",
+ opts:["Технологии встраиваются в бытовые приборы, делая их «умными»","Приложения и ресурсы доступны через Интернет любому пользователю или компании с любого устройства, без вложений в новую инфраструктуру","Пользователи могут применять личные устройства для доступа к корпоративной сети","Домашняя сеть использует существующую электропроводку"], ok:[1],
+ ex:"Облако расширяет ИТ-возможности без покупки инфраструктуры, найма персонала и лицензий. Остальные варианты — IoT, BYOD, powerline. Тема 1.7.6."},
+{id:36, cat:"Базовая настройка", q:"Какое утверждение о работающем файле конфигурации (running-config) в Cisco IOS верно?",
+ opts:["Изменения в нём влияют на работу устройства немедленно","Он хранится в NVRAM","Его следует удалять командой erase running-config","Он автоматически сохраняется при перезагрузке маршрутизатора"], ok:[0],
+ ex:"running-config живёт в RAM и применяется сразу, но при перезагрузке теряется (если не сделать copy running-config startup-config). Тема 2.5.1."},
+{id:37, cat:"Протоколы и модели", q:"Какой PDU обрабатывается, когда хост-компьютер деинкапсулирует сообщение на транспортном уровне модели TCP/IP?",
+ opts:["Биты","Кадр","Пакет","Сегмент"], ok:[3],
+ ex:"Транспортный уровень → сегмент (TCP) или датаграмма (UDP); сетевой → пакет; канальный → кадр; физический → биты. Тема 3.6.3."},
+{id:38, cat:"ARP", q:"Какой адрес назначения используется в кадре запроса ARP?",
+ opts:["0.0.0.0","255.255.255.255","FFFF.FFFF.FFFF","127.0.0.1","01-00-5E-00-AA-23"], ok:[2],
+ ex:"ARP-запрос — это широковещательный кадр уровня 2: MAC назначения FFFF.FFFF.FFFF. 255.255.255.255 — это IP-броадкаст, а не MAC. Тема 9.2.3."},
+{id:39, cat:"Базовая настройка", q:"Какой интерфейс является SVI по умолчанию на коммутаторе Cisco?",
+ opts:["VLAN1","VLAN99","VLAN100","VLAN999"], ok:[0],
+ ex:"SVI (switch virtual interface) по умолчанию — interface VLAN 1. Тема 2.6.2."},
+{id:40, cat:"Коммутация Ethernet", q:"Какой метод коммутации использует значение CRC в кадре?",
+ opts:["cut-through","fast-forward","fragment-free","store-and-forward"], ok:[3],
+ ex:"Store-and-forward принимает кадр целиком и проверяет CRC перед пересылкой. Cut-through и его варианты (fast-forward, fragment-free) начинают пересылку раньше. Тема 7.4.1."},
+{id:41, cat:"Протоколы и модели", q:"Какой метод могут использовать два компьютера, чтобы гарантировать, что пакеты не будут отброшены из-за слишком быстрой отправки данных?",
+ opts:["Инкапсуляция","Управление потоком (flow control)","Метод доступа к среде","Тайм-аут ответа"], ok:[1],
+ ex:"Flow control согласует скорость: отправитель не шлёт быстрее, чем получатель успевает обрабатывать (в TCP — скользящее окно). Тема 3.1.9."},
+{id:42, cat:"Адресация IPv6", q:"Какой префикс у адреса хоста 2001:DB8:BC15:A:12AB::1/64?",
+ opts:["2001:DB8:BC15","2001:DB8:BC15:A","2001:DB8:BC15:A:1","2001:DB8:BC15:A:12"], ok:[1],
+ ex:"/64 = первые 64 бита = 4 группы по 16 бит: 2001:DB8:BC15:A. Тема 12.8.1."},
+{id:43, cat:"Адресация IPv6", q:"Какой протокол поддерживает автоматическую настройку адресов без состояния (SLAAC) для динамического назначения IPv6-адресов хосту?",
+ opts:["ARPv6","DHCPv6","ICMPv6","UDP"], ok:[2],
+ ex:"SLAAC работает на сообщениях ICMPv6 (Router Solicitation / Router Advertisement). DHCPv6 — альтернативный (stateful) способ. Тема 12.5.1."},
+{id:44, cat:"Прикладной уровень", q:"Какой протокол прикладного уровня используется для предоставления услуг автоматического назначения IP-адресов узлам сети?",
+ opts:["HTTP","SMTP","DHCP","SMB"], ok:[2],
+ ex:"DHCP выдаёт IP-адрес, маску, шлюз и DNS. ⚠️ В банке есть похожий вопрос: «для общих файлов и печати в Microsoft-приложениях» → ответ SMB; «для преобразования имён» → DNS."},
+{id:45, cat:"Адресация IPv6", q:"Какой тип адреса автоматически назначается интерфейсу, когда на этом интерфейсе включается протокол IPv6?",
+ opts:["global unicast","link-local","loopback","unique local"], ok:[1],
+ ex:"При включении IPv6 интерфейс автоматически генерирует link-local адрес (FE80::/10). Тема 12.3.7."},
+{id:46, cat:"Транспортный уровень", q:"Какой тип информации включается в заголовок транспортного уровня?",
+ opts:["Физические адреса источника и назначения","Логические адреса источника и назначения","Номера портов источника и назначения","Поле типа протокола сетевой среды"], ok:[2],
+ ex:"Транспортный уровень добавляет порты источника и назначения — они идентифицируют приложение. Тема 14.2.2."},
+{id:47, cat:"Сетевой уровень", q:"Какой тип маршрута обозначается кодом C в таблице маршрутизации IPv4 на маршрутизаторе Cisco?",
+ opts:["Статический маршрут","Маршрут, полученный по EIGRP","Маршрут с прямым подключением (directly connected)","Маршрут по умолчанию"], ok:[2],
+ ex:"Коды: C — connected, L — local, S — static, D — EIGRP, O — OSPF, R — RIP, * — candidate default."},
+{id:48, cat:"Транспортный уровень", q:"Какой тип порта необходимо запросить у IANA, чтобы использовать его для конкретного приложения?",
+ opts:["Зарегистрированный порт (1024–49151)","Общеизвестный порт (0–1023)","Динамический порт (49152–65535)","Порт источника"], ok:[0],
+ ex:"Registered ports выдаёт IANA по запросу для конкретных приложений. Well-known зарезервированы за стандартными службами. Тема 14.4.3."},
+{id:49, cat:"Физический уровень", q:"Какой тип разъёма использует сетевая карта (NIC) для медного кабеля Ethernet?",
+ opts:["DB-9","BNC","RJ-45","USB-C"], ok:[2],
+ ex:"Для витой пары — RJ-45 (8P8C). Тема 4.4.3."},
+{id:50, cat:"Малая сеть / QoS", q:"Какой тип сетевого трафика требует QoS?",
+ opts:["Электронная почта","Онлайн-покупки","Видеоконференции","Wiki"], ok:[2],
+ ex:"Видеоконференция — аудио и видео в реальном времени: чувствительна к задержке и джиттеру → нужен QoS. Тема 1.6.4."},
+{id:51, cat:"Протоколы и модели", q:"Какой уровень модели TCP/IP используется для форматирования, сжатия и шифрования данных?",
+ opts:["Интернет-уровень (internetwork)","Сеансовый","Представления","Прикладной","Уровень доступа к сети"], ok:[3],
+ ex:"В TCP/IP всего 4 уровня, и прикладной объединяет функции трёх верхних уровней OSI (application + presentation + session). Тема 15.1.1."},
+{id:52, cat:"Протоколы и модели", q:"Какой формат PDU используется, когда биты принимаются из сетевой среды сетевой картой (NIC) хоста?",
+ opts:["Файл","Кадр","Пакет","Сегмент"], ok:[1],
+ ex:"Биты физического уровня на канальном оформляются в кадр. Тема 3.6.3."},
+{id:53, cat:"Базовая настройка", q:"Какую информацию отображает команда show startup-config?",
+ opts:["Образ IOS, скопированный в RAM","Загрузочную программу в ROM","Содержимое текущего работающего конфигурационного файла в RAM","Содержимое сохранённого конфигурационного файла в NVRAM"], ok:[3],
+ ex:"show startup-config = NVRAM (сохранённая). show running-config = RAM (текущая). Тема 2.5.1."},
+{id:54, cat:"Малая сеть", q:"Какую команду можно использовать на ПК с Windows, чтобы увидеть IP-конфигурацию этого компьютера (IP-адрес, маску, шлюз)?",
+ opts:["show ip interface brief","ping","show interfaces","ipconfig"], ok:[3],
+ ex:"ipconfig (или ipconfig /all) — Windows. show ip interface brief / show interfaces — это команды IOS на маршрутизаторе/коммутаторе. Тема 17.5.1."},
+{id:55, cat:"Транспортный уровень", q:"Когда UDP предпочтительнее TCP?",
+ opts:["Когда приложению требуется надёжная доставка без потерь данных","Когда данные должны быть доставлены строго в порядке","Когда приложению требуется быстрая доставка с минимальными накладными расходами, а небольшая потеря данных не критична","Когда нужно установить соединение с подтверждением"], ok:[2],
+ ex:"UDP: нет рукопожатия, подтверждений и повторных передач → низкая задержка и малый заголовок (8 байт). Используется для видео/аудио, DNS, DHCP, TFTP. Тема 14.3.4."},
+{id:56, cat:"Физический уровень", q:"Когда данные передаются по носителю в виде потока единиц и нулей, как принимающий узел определяет, где начинается и где заканчивается кадр?",
+ opts:["Передающий узел отправляет маячок (beacon), уведомляющий о начале кадра","Передающий узел вставляет в кадр стартовые и стоповые биты","Принимающий узел определяет начало кадра по физическому адресу","Передающий узел отправляет внеполосный (out-of-band) сигнал"], ok:[1],
+ ex:"Официальный ключ Cisco v5.1/v6.0 — стартовые и стоповые биты. ⚠️ Если в твоём тесте вместо этого вариант про преамбулу/SFD или про «преобразование битов в заранее определённый код» — выбирай его (это версия v7)."},
+{id:57, cat:"Адресация IPv4", multi:2, q:"Компания имеет сетевой адрес 192.168.1.64 с маской подсети 255.255.255.192. Ей нужно создать две подсети: одна на 18 хостов, другая на 10 хостов. Какие две подсети подойдут? (Выберите два.)",
+ opts:["192.168.1.64/27","192.168.1.32/27","192.168.1.96/28","192.168.1.128/26","192.168.1.192/27"], ok:[0,2],
+ ex:"/27 = 32 адреса − 2 = 30 хостов (хватит на 18). /28 = 16 − 2 = 14 хостов (хватит на 10). Адрес сети 192.168.1.64/26 делится на 4 подсети по /28: .64, .80, .96, .112. Тема 11.5.2."},
+{id:58, cat:"Адресация IPv6", q:"На что указывает успешный эхо-запрос (ping) на IPv6-адрес ::1?",
+ opts:["Хост правильно подключён кабелем","Адрес шлюза по умолчанию настроен верно","Все узлы в локальном канале доступны","Link-local адрес настроен правильно","Стек IP корректно установлен и работает на самом хосте"], ok:[4],
+ ex:"::1 — loopback-адрес IPv6 (аналог 127.0.0.1). Пинг на него проверяет только собственный TCP/IP-стек, а не сеть. Тема 12.3.3."},
+{id:59, cat:"Безопасность", q:"Некоторые маршрутизаторы и коммутаторы в коммутационном шкафу вышли из строя после отказа кондиционера. Какой тип угрозы описывает эта ситуация?",
+ opts:["Конфигурационная","Угроза окружающей среды (environmental)","Электрическая","Угроза обслуживания"], ok:[1],
+ ex:"Классы угроз: аппаратные, environmental (температурные экстремумы), электрические (перепады питания), конфигурационные, связанные с обслуживанием. Тема 16.1.3."},
+{id:60, cat:"Протоколы и модели", img:true, multi:2, q:"🖼 HostA пытается связаться с ServerB (ServerB в другой сети, шлюз HostA — RouterA). Какие два утверждения верно описывают адресацию, которую создаст HostA? (Выберите два.)",
+ opts:["HostA создаст пакет с IP-адресом назначения RouterA","HostA создаст кадр с MAC-адресом назначения SwitchA","HostA создаст пакет с IP-адресом назначения ServerB","HostA создаст кадр с MAC-адресом назначения RouterB","HostA создаст кадр с MAC-адресом назначения RouterA","HostA создаст пакет с IP-адресом назначения SwitchA"], ok:[2,4],
+ ex:"В пакет всегда идёт IP конечного получателя (ServerB), а в кадр — MAC ближайшего шлюза (RouterA), потому что MAC ServerB хосту неизвестен. Тема 3.7.2."},
+{id:61, cat:"Сетевой уровень", img:true, q:"🖼 R1 получает пакет, предназначенный для IP-адреса 192.168.2.10. Через какой интерфейс R1 перешлёт пакет? (В таблице маршрутизации R1 есть запись 192.168.2.0/24 через next hop, и маршрут по умолчанию.)",
+ opts:["GigabitEthernet0/0","GigabitEthernet0/1","Serial0/0/0","Serial0/0/1"], ok:[3],
+ ex:"Сначала находится наиболее специфичная запись → next hop; затем по next hop делается второй поиск в таблице → выходной интерфейс Serial0/0/1."},
+{id:62, cat:"Физический уровень", img:true, q:"🖼 Какое утверждение описывает методы управления доступом к среде, используемые сетями на рисунке (сеть 1 — Ethernet-сегмент, сеть 3 — беспроводная)?",
+ opts:["Сеть 1 — CSMA/CD, сеть 3 — CSMA/CA","Сеть 1 — CSMA/CA, сеть 3 — CSMA/CD","Сеть 1 — опрос (polling), сеть 3 — CSMA/CD","Все три сети используют один и тот же метод"], ok:[0],
+ ex:"Проводной Ethernet с общей средой использует CSMA/CD (обнаружение коллизий), беспроводная сеть — CSMA/CA (предотвращение коллизий, т.к. коллизию «услышать» нельзя). Тема 4.6.2."},
+{id:63, cat:"Сетевой уровень", img:true, q:"🖼 Какой маршрут из таблицы маршрутизации ПК1 будет использован для трафика, предназначенного для ПК2? (Таблица: 192.168.10.0/24 → Gateway On-link; 0.0.0.0/0.0.0.0 → 192.168.10.1; 127.0.0.0/8 и 127.0.0.1 — loopback.)",
+ opts:["127.0.0.1 → 127.0.0.1","127.0.0.0/255.0.0.0 → On-link","Запись сети, в которой находится ПК2 (Gateway On-link), если ПК2 в той же сети; иначе маршрут по умолчанию 0.0.0.0/0.0.0.0 → 192.168.10.1","Собственный адрес ПК1 с маской /32"], ok:[2],
+ ex:"Правило: тот же сегмент → используется запись сети (On-link); другая сеть → маршрут по умолчанию через шлюз. Loopback-записи (127.x.x.x) и /32 собственного адреса никогда не используются для чужих хостов."},
+{id:64, cat:"Адресация IPv6", img:true, q:"🖼 Компания развертывает схему адресации IPv6 «site / sub-site / subnet». Каково максимальное число подсетей, которое компания может назначить одному sub-site, если на sub-site выделен один шестнадцатеричный символ?",
+ opts:["0","4","16","256"], ok:[2],
+ ex:"Один hex-символ = 4 бита = 16 значений (0–F). Тема 12.8.1."},
+{id:65, cat:"Коммутация Ethernet", img:true, q:"🖼 Небольшая коммутируемая сеть и таблица MAC-адресов коммутатора. PC1 отправил кадр в адрес PC3 (его MAC-адреса в таблице нет; PC1 подключён к порту 4). Что сделает коммутатор?",
+ opts:["Отбросит кадр","Перешлёт кадр только в порт 2","Перешлёт кадр во все порты, кроме порта 4","Перешлёт кадр во все порты","Перешлёт кадр только в порты 1 и 3"], ok:[2],
+ ex:"Неизвестный unicast → лавинная рассылка (flood) во все порты, кроме входного. Тема 9.2.8."},
+{id:66, cat:"ICMP", img:true, q:"🖼 Сетевой техник проверяет возможность подключения и хочет увидеть статус интерфейсов маршрутизатора (up/down) и назначенные им IP-адреса одной командой. Какую команду использовать?",
+ opts:["show ip interface brief","show mac-address-table","ping 127.0.0.1","ipconfig /all","show version"], ok:[0],
+ ex:"show ip interface brief — краткий вывод: интерфейс, IP, статус протокола и канала. ⚠️ Если в твоём варианте вопрос про другое: show version → версия IOS и config register; show mac-address-table → MAC-таблица коммутатора; ping 127.0.0.1 → проверка собственного стека TCP/IP."},
+{id:67, cat:"Адресация IPv4", img:true, q:"🖼 Дан сетевой адрес 192.168.5.0 и маска подсети 255.255.255.224 (/27). Сеть разделена на подсети одинакового размера, в каждой занято по 6 адресов хостов. Сколько всего адресов хостов НЕ используется во всех назначенных подсетях?",
+ opts:["72","24","56","88"], ok:[0],
+ ex:"/27 = 32 адреса, из них 30 полезны. 30 − 6 занятых = 24 неиспользованных в одной подсети; ×3 подсети = 72. (Классический вариант этого вопроса в банке даёт ответ 72.)"},
+{id:68, cat:"Физический уровень", img:true, q:"🖼 Что не так с показанным окончанием (обжимкой) кабеля?",
+ opts:["Оплётка не должна была быть снята","Используется разъём неверного типа","Длина расплетённых жил слишком велика","Провода слишком толстые для используемого разъёма"], ok:[2],
+ ex:"При обжимке RJ-45 расплетённая часть должна быть минимальной, а внешняя оболочка — зажата в разъёме. Длинные расплетённые участки → помехи и потери. Тема 4.4.2."},
+{id:69, cat:"Транспортный уровень", q:"ПК загружает большой файл с сервера. Окно TCP составляет 1000 байт, сервер отправляет данные сегментами по 100 байт. Сколько сегментов сервер отправит до получения запроса подтверждения?",
+ opts:["1","10","100","1000"], ok:[1],
+ ex:"Окно / размер сегмента = 1000 / 100 = 10 сегментов. Тема 14.6.3."},
+{id:70, cat:"Прикладной уровень", multi:3, q:"Промышленная компания подписывается на услуги хостинга у ISP: веб-хостинг, передача файлов и электронная почта. Какие ТРИ протокола представляют эти приложения? (Выберите три.)",
+ opts:["FTP","HTTP","DNS","SNMP","DHCP","SMTP"], ok:[0,1,5],
+ ex:"Веб → HTTP, файлы → FTP, почта → SMTP. DNS — преобразование имён, SNMP — управление, DHCP — выдача адресов. Тема 15.3.2."},
+{id:71, cat:"Безопасность", q:"Сетевой администратор использует на маршрутизаторе команду login block-for 150 attempts 4 within 90. Каков результат при неудачных попытках входа?",
+ opts:["Вход блокируется на 150 секунд после 4 неудачных попыток в течение 90 секунд","Вход блокируется на 90 секунд после 4 неудачных попыток в течение 150 секунд","Вход блокируется на 150 секунд после 90 неудачных попыток в течение 4 секунд","Маршрутизатор блокирует 4 попыток входа каждые 150 секунд"], ok:[0],
+ ex:"Синтаксис: login block-for <секунды блокировки> attempts <число попыток> within <окно в секундах>. Тема 16.4.3."},
+{id:72, cat:"Адресация IPv4", q:"Администратор хочет одну и ту же маску для всех сетей объекта: IP-телефоны — 22 адреса, ПК — 20, принтеры — 2, сканеры — 2. Какая маска подсети наиболее эффективна?",
+ opts:["255.255.255.192","255.255.255.252","255.255.255.240","255.255.255.248","255.255.255.0","255.255.255.224"], ok:[5],
+ ex:"Берём самую крупную сеть: 22 хоста → нужно 5 бит хоста (2⁵=32, 32−2=30 ≥ 22) → маска /27 = 255.255.255.224. Тема 11.7.2."},
+{id:73, cat:"ICMP", q:"Сетевой техник выполнил команду C:> tracert -6 www.cisco.com на ПК с Windows. Каково назначение параметра -6?",
+ opts:["Ограничивает трассировку 6 переходами","Устанавливает тайм-аут 6 мс для каждого ответа","Отправляет 6 зондов в пределах каждого TTL","Принудительно использует IPv6"], ok:[3],
+ ex:"-6 = IPv6 (в IPv4-варианте было бы -4). Тема 17.4.3."},
+{id:74, cat:"Адресация IPv4", q:"Сколько адресов узлов доступно в сети 172.16.128.0 с маской подсети 255.255.252.0?",
+ opts:["510","512","1022","1024","2046","2048"], ok:[2],
+ ex:"255.255.252.0 = /22 → 10 бит на хост → 2¹⁰ − 2 = 1022. Тема 11.5.2."},
+{id:75, cat:"ARP", q:"Таблица ARP в коммутаторе сопоставляет какие два типа адресов вместе?",
+ opts:["Адрес уровня 3 с адресом уровня 2","Адрес уровня 3 с адресом уровня 4","Адрес уровня 4 с адресом уровня 2","Адрес уровня 2 с адресом уровня 4"], ok:[0],
+ ex:"ARP связывает IPv4-адрес (L3) и MAC-адрес (L2). Тема 9.2.2."},
+{id:76, cat:"Транспортный уровень", q:"Хост-устройство принимает потоковое видео в реальном времени. Как устройство учитывает видеоданные, потерянные при передаче?",
+ opts:["Запрашивает повторную отправку потерянных пакетов","Устройство продолжит приём, но возможен кратковременный сбой (подвисание картинки)","Закрывает соединение","Уменьшает размер окна TCP"], ok:[1],
+ ex:"Стриминг использует UDP: потерянные данные не запрашиваются повторно, сбой воспринимается как кратковременное подвисание. При TCP данные обязаны прийти полностью и по порядку. Тема 14.3.4."},
+{id:77, cat:"Канальный уровень", q:"Что верно в отношении физических и логических топологий?",
+ opts:["Логическая топология всегда совпадает с физической","Физические топологии описывают, как сеть передаёт кадры","Физические топологии отображают схему IP-адресации каждой сети","Логические топологии определяют способ передачи данных между устройствами"], ok:[3],
+ ex:"Физическая топология = как устройства соединены кабелями; логическая = как данные реально передаются между узлами (они могут не совпадать). Тема 6.2.1."},
+{id:78, cat:"Адресация IPv4", q:"Что представляет собой IP-адрес 172.17.4.250/24?",
+ opts:["Адрес сети","Многоадресный адрес","Адрес узла (host address)","Широковещательный адрес"], ok:[2],
+ ex:"Сеть 172.17.4.0/24, броадкаст 172.17.4.255, значит .250 — адрес хоста. Тема 11.1.6."},
+{id:79, cat:"Сетевой уровень", q:"Что произойдёт, если адрес шлюза по умолчанию неправильно настроен на хосте?",
+ opts:["Хост не сможет общаться с другими хостами в локальной сети","Коммутатор не будет пересылать пакеты, инициированные хостом","Хосту придётся использовать ARP для определения правильного адреса шлюза","Хост не сможет общаться с хостами в других сетях","Ping на 127.0.0.1 будет неудачным"], ok:[3],
+ ex:"Внутри своей сети хост общается напрямую (через ARP), а вот в другие сети трафик пойдёт неверно или никуда. Тема 10.3.1."},
+{id:80, cat:"Транспортный уровень", q:"Что произойдёт, если первый пакет передачи TFTP будет потерян?",
+ opts:["Передача прервётся, так как TFTP не поддерживает повторную отправку","Сеанс TFTP завершится отправкой ошибки","Приложение TFTP повторит запрос","Потерянный пакет будет восстановлен из буфера"], ok:[2],
+ ex:"TFTP работает поверх UDP, но на прикладном уровне имеет собственный механизм подтверждения/тайм-аута — приложение повторит запрос. Тема 14.3.4."},
+{id:81, cat:"Транспортный уровень", q:"Что произойдёт, если часть FTP-сообщения не будет доставлена получателю?",
+ opts:["Сообщение потеряно, так как FTP не использует надёжную доставку","Исходный хост FTP отправит запрос получателю","Потерянная часть FTP-сообщения будет отправлена повторно","Всё FTP-сообщение будет отправлено повторно"], ok:[2],
+ ex:"FTP работает поверх TCP: номера последовательности и подтверждений выявляют недостающий сегмент, и повторно отправляется только он. Тема 14.6.1."},
+{id:82, cat:"Канальный уровень", q:"Что содержится в трейлере (окончании) кадра канального уровня?",
+ opts:["Логический адрес","Физический адрес","Данные","Код для обнаружения ошибок"], ok:[3],
+ ex:"В трейлере — поле FCS (Frame Check Sequence) с CRC для обнаружения ошибок. Адреса в заголовке, данные — в полезной нагрузке. Тема 6.3.2."},
+{id:83, cat:"Коммутация Ethernet", q:"Что такое Auto-MDIX?",
+ opts:["Тип коммутатора Cisco","Тип разъёма Ethernet","Тип порта на коммутаторе Cisco","Функция, которая определяет тип кабеля Ethernet (прямой или перекрёстный) и автоматически настраивает порт"], ok:[3],
+ ex:"Auto-MDIX позволяет подключать и прямой, и перекрёстный кабель — порт сам подстроится. Тема 7.4.5."},
+{id:84, cat:"Сети сегодня", q:"Что такое Интернет?",
+ opts:["Это сеть на основе технологии Ethernet","Он обеспечивает сетевой доступ для мобильных устройств","Он обеспечивает соединения через взаимосвязанные глобальные сети","Это частная сеть организации с LAN- и WAN-подключениями"], ok:[2],
+ ex:"Интернет — глобальная совокупность взаимосвязанных сетей разных технологий (Ethernet, DSL/cable, serial). Последнее описание — это интранет. Тема 1.4.3."},
+{id:85, cat:"Сети сегодня", type:"input", q:"АББРЕВИАТУРА ___ ОТНОСИТСЯ К ПОЛИТИКЕ, КОТОРАЯ ПОЗВОЛЯЕТ СОТРУДНИКАМ ИСПОЛЬЗОВАТЬ СВОИ ЛИЧНЫЕ УСТРОЙСТВА В ОФИСЕ. (Введите пропущенные слова.)",
+ accept:["byod","bring your own device","bring your own device (byod)","byod (bring your own device)"],
+ ex:"BYOD — Bring Your Own Device. Даёт гибкость доступа к ресурсам, но требует более строгой политики безопасности. Тема 1.7.2."},
+{id:86, cat:"Адресация IPv6", type:"input", q:"Рассмотрим диапазон адресов: 2001:0DB8:BC15:00A0:0000:: … 2001:0DB8:BC15:00AF:0000::. Какова длина префикса для этого диапазона? (Введите число.)",
+ accept:["60","/60","0x60"],
+ ex:"Общая часть — 2001:0DB8:BC15:00A = 3×16 бит + 12 бит (00A) = 60 бит → /60. Тема 12.2.1."},
+{id:87, cat:"Прикладной уровень", img:true, q:"🖼 Запрос сервера имён. Какая команда использовалась для разрешения заданного имени хоста путём запроса серверов имён?",
+ opts:["ping","tracert","nslookup","ipconfig /all","netstat"], ok:[2],
+ ex:"nslookup — прямой запрос к DNS-серверу. ipconfig /displaydns показывает только локальный кэш. Тема 15.2.3."},
+{id:88, cat:"Канальный уровень", type:"input", q:"КАКАЯ АББРЕВИАТУРА ИСПОЛЬЗУЕТСЯ ДЛЯ ОБОЗНАЧЕНИЯ ПОДУРОВНЯ КАНАЛА ПЕРЕДАЧИ ДАННЫХ, КОТОРЫЙ ИДЕНТИФИЦИРУЕТ ПРОТОКОЛ СЕТЕВОГО УРОВНЯ? (Введите пропущенные слова, без сокращений.)",
+ accept:["llc","logical link control","llc (logical link control)","ieee 802.2","802.2"],
+ ex:"LLC (Logical Link Control, IEEE 802.2) помещает в кадр информацию о том, какой протокол сетевого уровня инкапсулирован (IPv4/IPv6). Второй подуровень — MAC (IEEE 802.3)."},
+{id:89, cat:"Базовая настройка", type:"input", q:"КОМАНДА ___ В ПРИВИЛЕГИРОВАННОМ РЕЖИМЕ EXEC ПОКАЗЫВАЕТ ЗНАЧЕНИЕ РЕГИСТРА КОНФИГУРАЦИИ. (Введите пропущенные слова.)",
+ accept:["show version"],
+ ex:"show version выводит версию IOS, аптайм, образ загрузки и config register (обычно 0x2102)."},
+{id:90, cat:"Прикладной уровень", type:"input", q:"КАКОЙ ТИП HTTP-СООБЩЕНИЯ ИСПОЛЬЗУЕТСЯ КЛИЕНТОМ ДЛЯ ЗАПРОСА ДАННЫХ С ВЕБ-СЕРВЕРА?",
+ accept:["get","http get"],
+ ex:"GET — запрос ресурса. POST — отправка данных формы, PUT — загрузка/обновление, HEAD — только заголовки. Тема 15.3.2."},
+];
+
+/* ================= состояние ================= */
+const LS='urfu_net90_v1';
+let S=load();
+function load(){try{const r=JSON.parse(localStorage.getItem(LS)||'{}');return {res:r.res||{},wrong:r.wrong||[],hist:r.hist||[]} }catch(e){return {res:{},wrong:[],hist:[]}}}
+function save(){try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+
+let mode='train', order=[], idx=0, picked=new Set(), checked=false, examAnswers={}, inputVal='';
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+
+/* ================= утилиты ================= */
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(s){ // **bold**, `code`
+  return esc(s).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/`([^`]+)`/g,'<code>$1</code>');
+}
+function norm(s){return String(s).toLowerCase().replace(/ё/g,'е').replace(/[.,;:!?()]/g,' ').replace(/\s+/g,' ').trim()}
+function rightText(q){ // тексты правильных вариантов
+  if(q.type==='input') return q.accept.map(a=>a.toUpperCase()).join(' / ');
+  return q.ok.map(i=>q.opts[i]).join(q.ok.length>1?'  •  ':'');
+}
+
+/* ================= меню ================= */
+function renderMenu(){
+  const answered=Object.keys(S.res).length;
+  const okCnt=Object.values(S.res).filter(v=>v===1).length;
+  $('#statPct').textContent=answered? Math.round(okCnt/answered*100)+'%':'—';
+  $('#statLine').innerHTML=answered
+    ? `Пройдено <b>${answered}</b> из ${QUESTIONS.length} · верно <b>${okCnt}</b> · в списке ошибок <b>${S.wrong.length}</b>`
+    : 'Прогресс пока не начат — выбери режим ниже.';
+  $('#menuBar').style.width=(answered/QUESTIONS.length*100)+'%';
+  $('#cntTrain').textContent=QUESTIONS.length+' вопросов';
+  $('#cntWrong').textContent=S.wrong.length? S.wrong.length+' вопросов':'пусто — отлично!';
+  $('#cntImg').textContent=QUESTIONS.filter(q=>q.img).length+' вопросов';
+  $('#cntInput').textContent=QUESTIONS.filter(q=>q.type==='input').length+' вопросов';
+  // темы
+  const cats={};
+  QUESTIONS.forEach(q=>{cats[q.cat]=cats[q.cat]||[];cats[q.cat].push(q.id)});
+  $('#catGrid').innerHTML=Object.entries(cats).sort((a,b)=>b[1].length-a[1].length).map(([c,ids])=>{
+    const done=ids.filter(i=>S.res[i]!==undefined).length;
+    return `<button class="mode" data-cat="${esc(c)}"><b>${esc(c)}</b>
+      <span>${ids.length} вопр. · пройдено ${done}</span></button>`;
+  }).join('');
+  $$('#catGrid .mode').forEach(b=>b.onclick=()=>start('cat',QUESTIONS.filter(q=>q.cat===b.dataset.cat).map(q=>q.id),b.dataset.cat));
+}
+
+/* ================= старт ================= */
+function start(m, ids, label){
+  mode=m;
+  const hideImg=$('#optHideImg').checked;
+  let list=QUESTIONS.filter(q=>ids.includes(q.id) && !(hideImg&&q.img));
+  if(!list.length){alert('Нет вопросов по этому фильтру (возможно, все скрыты как «с рисунком»).');return}
+  if(m==='rand') list=shuffle(list).slice(0,30);
+  else if(m!=='exam') list=shuffle(list);
+  order=list.map(q=>q.id);
+  $('#modeName').textContent=label||({train:'Тренировка',exam:'Экзамен · 90',rand:'Случайные 30',wrong:'Ошибки',img:'С рисунком',input:'Ввод ответа'}[m]||m);
+  idx=0; examAnswers={};
+  $('#scr-menu').classList.add('hidden');$('#scr-ref').classList.add('hidden');$('#scr-result').classList.add('hidden');
+  $('#scr-quiz').classList.remove('hidden');
+  show();
+}
+
+/* ================= показ вопроса ================= */
+function show(){
+  const q=QUESTIONS.find(x=>x.id===order[idx]);
+  picked=new Set(); checked=false; inputVal='';
+  const done=idx;
+  $('#qBar').style.width=((done)/order.length*100)+'%';
+  $('#qCount').textContent=`Вопрос ${idx+1} из ${order.length}`;
+  $('#chipProg').innerHTML=`№ <b>${idx+1}</b>/${order.length}`;
+  const meta=[`<span class="tag">№ ${q.id}</span>`,`<span class="tag">${esc(q.cat)}</span>`];
+  if(q.multi) meta.push(`<span class="tag m">выбери ${q.multi}</span>`);
+  if(q.type==='input') meta.push(`<span class="tag i">ввод ответа</span>`);
+  if(q.img) meta.push(`<span class="tag i">🖼 на экзамене будет рисунок</span>`);
+  const st=S.res[q.id];
+  if(st!==undefined) meta.push(`<span class="tag">${st?'✅ уже отвечено верно':'❌ была ошибка'}</span>`);
+  $('#qMeta').innerHTML=meta.join('');
+  $('#qText').innerHTML=fmt(q.q);
+  $('#fb').className='fb';$('#fb').innerHTML='';
+  $('#btnPrev').classList.toggle('hidden',idx===0);
+  $('#btnFinishTop').classList.toggle('hidden',mode!=='exam');
+  if(mode==='exam'){
+    $('#btnAnswer').classList.add('hidden');$('#btnGiveup').classList.add('hidden');$('#cntSel').textContent='';
+    $('#btnNext').classList.remove('hidden');$('#btnNext').textContent='Дальше →';
+    $('#btnFinish').classList.toggle('hidden',idx!==order.length-1);
+  }else{
+    $('#btnNext').classList.add('hidden');$('#btnNext').textContent='Дальше →';
+    $('#btnFinish').classList.add('hidden');
+    const need=q.multi;
+    $('#btnAnswer').classList.toggle('hidden',!need);
+    $('#btnGiveup').classList.toggle('hidden',!need);
+    $('#btnAnswer').disabled=true;
+    $('#btnAnswer').textContent='Ответить ✓';
+    $('#cntSel').textContent='';
+  }
+
+  if(q.type==='input'){
+    $('#qOpts').innerHTML=''; $('#qInput').classList.remove('hidden');
+    $('#btnCheck').textContent='Ответить ✓';
+    const el=$('#inp'); el.value=''; el.className='inp'; el.disabled=false; el.focus();
+  }else{
+    $('#qInput').classList.add('hidden');
+    let list=q.opts.map((t,i)=>({t,i}));
+    const ex=mode==='exam'?null:examAnswers[q.id];
+    if(ex&&ex.map) list=ex.map;                      // тот же порядок при возврате в экзамене
+    else if($('#optShuffle').checked) list=shuffle(list);
+    if(mode==='exam') examAnswers[q.id]={map:list,sel:(examAnswers[q.id]&&examAnswers[q.id].sel)||[]};
+    const isMulti=!!q.multi;
+    $('#qOpts').innerHTML=list.map((o,k)=>
+      `<button class="opt${isMulti?' multi':''}" data-i="${o.i}" data-k="${k}">
+         <span class="box"></span><span>${fmt(o.t)}</span>
+         <span class="kbd">${k+1}</span></button>`).join('');
+    $$('#qOpts .opt').forEach(b=>{
+      b.onclick=()=>{
+        if(checked&&mode!=='exam')return;
+        const i=+b.dataset.i;
+        if(isMulti){
+          if(!picked.has(i)&&picked.size>=q.multi){
+            // лимит выбран — мигаем кнопкой, выбор не сбрасываем
+            const ba=$('#btnAnswer');
+            ba.textContent=`Уже выбрано ${q.multi} — сними лишнее`;
+            ba.classList.remove('shake'); void ba.offsetWidth; ba.classList.add('shake');
+            return;
+          }
+          picked.has(i)?picked.delete(i):picked.add(i); b.classList.toggle('sel',picked.has(i));
+          $$('#qOpts .opt').forEach(x=>x.querySelector('.box').textContent=x.classList.contains('sel')?'✓':'');
+          const need=q.multi||1;
+          $('#cntSel').innerHTML=`выбрано <b>${picked.size}</b> из ${need}`;
+          $('#btnAnswer').disabled=(picked.size!==need);
+          $('#btnAnswer').textContent=(picked.size===need)?'Ответить ✓':`Выбери ещё ${need-picked.size}`;
+        }
+        else{ picked=new Set([i]); $$('#qOpts .opt').forEach(x=>{x.classList.remove('sel');x.querySelector('.box').textContent=''});
+          b.classList.add('sel'); }
+        if(mode==='exam'){examAnswers[q.id].sel=[...picked]; if(!isMulti)next();}
+        else if(!isMulti) check();
+      };
+    });
+    if(mode==='exam'&&examAnswers[q.id].sel.length){
+      examAnswers[q.id].sel.forEach(i=>{const b=$(`#qOpts .opt[data-i="${i}"]`);if(b){b.classList.add('sel');b.querySelector('.box').textContent='✓';picked.add(i)}});
+    }
+  }
+  if(mode==='exam'){$('#qOpts').style.display='';}
+  updateExamNav();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateExamNav(){
+  if(mode!=='exam')return;
+  const answered=order.filter(id=>{const a=examAnswers[id]||{};const q=QUESTIONS.find(x=>x.id===id);
+    return q.type==='input'?!!(a.text||'').trim():!!(a.sel||[]).length}).length;
+  $('#qCount').textContent=`Вопрос ${idx+1} из ${order.length} · отвечено ${answered}`;
+}
+
+/* ================= проверка ================= */
+function check(){
+  const q=QUESTIONS.find(x=>x.id===order[idx]);
+  if(checked)return;
+  let good=false, given='';
+  if(q.type==='input'){
+    const v=$('#inp').value.trim();
+    if(!v){$('#inp').focus();return}
+    inputVal=v; given=v;
+    good=q.accept.some(a=>norm(a)===norm(v));
+    $('#inp').classList.add(good?'right':'wrong'); $('#inp').disabled=true;
+  }else{
+    if(!picked.size)return;
+    given=[...picked].filter(i=>i>=0).map(i=>q.opts[i]).join('  •  ')||'(нет ответа)';
+    const okSet=new Set(q.ok);
+    good=picked.size===okSet.size&&[...picked].every(i=>okSet.has(i));
+    $$('#qOpts .opt').forEach(b=>{
+      const i=+b.dataset.i; b.classList.add('dis');
+      if(okSet.has(i))b.classList.add('right');
+      else if(picked.has(i))b.classList.add('wrong');
+      b.querySelector('.box').textContent=okSet.has(i)?'✓':(picked.has(i)?'✕':'');
+    });
+  }
+  checked=true;
+  const prev=S.res[q.id];
+  S.res[q.id]=good?1:0;
+  if(!good){ if(!S.wrong.includes(q.id))S.wrong.push(q.id); }
+  else { S.wrong=S.wrong.filter(x=>x!==q.id); }
+  save();
+  const fb=$('#fb');
+  fb.className='fb show '+(good?'ok':'bad');
+  fb.innerHTML=`<h4>${good?'✅ Верно':'❌ Неверно'}</h4>
+    <p>${fmt(q.ex)}</p>
+    ${good?'':`<p class="ans">Правильный ответ: <b>${fmt(rightText(q))}</b></p>`}
+    ${q.img?'<p class="ans">🖼 На экзамене к этому вопросу будет рисунок — правило решения в пояснении выше.</p>':''}`;
+  $('#btnNext').classList.remove('hidden');
+  $('#btnAnswer').classList.add('hidden');$('#btnGiveup').classList.add('hidden');$('#cntSel').textContent='';
+  $('#btnNext').textContent=(idx===order.length-1&&mode!=='exam')?'Показать результат →':'Дальше →';
+  if(idx===order.length-1&&mode!=='exam')$('#btnFinish').classList.remove('hidden');
+  $('#qBar').style.width=((idx+1)/order.length*100)+'%';
+  updChips();
+}
+function updChips(){
+  const ok=Object.values(S.res).filter(v=>v===1).length, bad=Object.values(S.res).filter(v=>v===0).length;
+  $('#chipOk').innerHTML=`верно <b>${ok}</b>`; $('#chipBad').innerHTML=`ошибок <b>${bad}</b>`;
+}
+
+/* ================= навигация ================= */
+function next(){
+  if(mode==='exam'){
+    const q=QUESTIONS.find(x=>x.id===order[idx]);
+    if(q.type==='input'){examAnswers[q.id]={text:$('#inp').value.trim()};}
+    if(idx<order.length-1){idx++;show()} else finishExam();
+    return;
+  }
+  if(!checked){check();if(!checked)return}
+  if(idx<order.length-1){idx++;show()} else showResult();
+}
+function prev(){ if(idx>0){idx--;show()} }
+function finishExam(){
+  const unanswered=order.filter(id=>{const a=examAnswers[id]||{};const q=QUESTIONS.find(x=>x.id===id);
+    return q.type==='input'?!(a.text||'').trim():!(a.sel||[]).length}).length;
+  if(unanswered>0&&!confirm(`Осталось без ответа: ${unanswered} вопр. Завершить и получить результат?`))return;
+  let ok=0;const detail=[];
+  order.forEach(id=>{
+    const q=QUESTIONS.find(x=>x.id===id); const a=examAnswers[id]||{};
+    let good=false,given='';
+    if(q.type==='input'){ given=a.text||''; good=q.accept.some(x=>norm(x)===norm(given)); }
+    else{ const sel=a.sel||[]; given=sel.map(i=>q.opts[i]).join('  •  ');
+      const s=new Set(q.ok); good=sel.length===s.size&&sel.every(i=>s.has(i)); }
+    if(good)ok++; else { if(!S.wrong.includes(id))S.wrong.push(id); }
+    S.res[id]=good?1:0;
+    if(good)S.wrong=S.wrong.filter(x=>x!==id);
+    detail.push({q,good,given});
+  });
+  save();updChips();renderResult(ok,order.length,detail);
+}
+function showResult(){
+  const detail=order.map((id,k)=>{
+    const q=QUESTIONS.find(x=>x.id===id);
+    const good=S.res[id]===1;
+    return {q,good,given:q.type==='input'?inputVal:''};
+  });
+  const ok=detail.filter(d=>d.good).length;
+  renderResult(ok,detail.length,detail);
+}
+function renderResult(ok,total,detail){
+  const pct=Math.round(ok/total*100);
+  $('#rPct').textContent=pct+'%';
+  $('#rPct').style.color=pct>=90?'var(--ok)':pct>=70?'var(--warn)':'var(--bad)';
+  $('#rVerdict').innerHTML = pct>=90?'🏆 Отлично — ты готов к тесту.'
+    :pct>=70?'👍 Зачётный уровень (в Moodle обычно нужно 70 %). Прогони ещё раз ошибки.'
+    :'📚 Нужно повторить: открой «Разбор» ниже и «📋 Все ответы».';
+  $('#rOk').textContent=ok;$('#rBad').textContent=total-ok;$('#rAll').textContent=total;
+  S.hist.unshift({d:new Date().toISOString(),mode,pct,ok,total});S.hist=S.hist.slice(0,20);save();
+  $('#rList').innerHTML=detail.map(({q,good,given})=>`
+    <div class="fb show ${good?'ok':'bad'}" style="margin-bottom:9px">
+      <h4>${good?'✅':'❌'} № ${q.id} · ${esc(q.cat)}</h4>
+      <p style="color:var(--tx);font-weight:600">${fmt(q.q)}</p>
+      ${good?'':`<p class="ans">Твой ответ: <b>${esc(given||'—')||'—'}</b><br>Правильно: <b>${fmt(rightText(q))}</b></p>`}
+      <p style="margin-top:6px">${fmt(q.ex)}</p>
+      <p style="margin-top:6px"><button class="btn sm gh" data-go="${q.id}">Пройти этот вопрос →</button></p>
+    </div>`).join('');
+  $$('#rList [data-go]').forEach(b=>b.onclick=()=>start('cat',[+b.dataset.go],'Один вопрос'));
+  $('#scr-quiz').classList.add('hidden');$('#scr-result').classList.remove('hidden');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ================= справочник ================= */
+let refFilter='all';
+function renderRef(){
+  const term=norm($('#refSearch').value||'');
+  const rows=QUESTIONS.filter(q=>{
+    if(refFilter==='wrong'&&!S.wrong.includes(q.id))return false;
+    if(refFilter==='new'&&S.res[q.id]!==undefined)return false;
+    if(refFilter==='img'&&!q.img)return false;
+    if(!term)return true;
+    return norm(q.id+' '+q.cat+' '+q.q+' '+rightText(q)).includes(term);
+  });
+  $('#refTbl tbody').innerHTML=rows.map(q=>{
+    const st=S.res[q.id];
+    const dot=st===1?'<span class="dotmark dm-ok" title="верно"></span>':st===0?'<span class="dotmark dm-bad" title="ошибка"></span>':'<span class="dotmark" style="background:#3b4a6b" title="не отвечено"></span>';
+    return `<tr><td class="num">${q.id}</td>
+      <td>${fmt(q.q)}<div style="margin-top:3px"><span class="pill">${esc(q.cat)}</span>${q.img?' <span class="pill">🖼</span>':''}${q.multi?` <span class="pill">выбери ${q.multi}</span>`:''}</div></td>
+      <td><b>${fmt(rightText(q))}</b></td><td>${dot}</td></tr>`;
+  }).join('')||'<tr><td colspan="4" style="color:var(--mut);padding:16px">Ничего не найдено</td></tr>';
+}
+
+/* ================= события ================= */
+$$('[data-mode]').forEach(b=>b.onclick=()=>{
+  const m=b.dataset.mode;
+  if(m==='wrong'){ if(!S.wrong.length){alert('Ошибок пока нет — список пустой 🎉');return} start(m,S.wrong.slice()); }
+  else if(m==='img') start(m,QUESTIONS.filter(q=>q.img).map(q=>q.id));
+  else if(m==='input') start(m,QUESTIONS.filter(q=>q.type==='input').map(q=>q.id));
+  else if(m==='train'||m==='exam'||m==='rand') start(m,QUESTIONS.map(q=>q.id));
+});
+$('#btnHome').onclick=()=>{renderMenu();$('#scr-quiz').classList.add('hidden');$('#scr-result').classList.add('hidden');$('#scr-ref').classList.add('hidden');$('#scr-menu').classList.remove('hidden');updChips();window.scrollTo({top:0})};
+function showScr(id){['scr-menu','scr-quiz','scr-result','scr-ref','scr-last','scr-traps'].forEach(s=>$('#'+s).classList.toggle('hidden',s!==id));window.scrollTo({top:0})}
+$('#btnLast').onclick=()=>showScr('scr-last');
+$('#lastBack').onclick=$('#btnHome').onclick;
+$('#lastRef').onclick=$('#btnRef').onclick;
+$('#btnRef').onclick=()=>{refFilter='all';$('#refSearch').value='';renderRef();$('#scr-menu').classList.add('hidden');$('#scr-quiz').classList.add('hidden');$('#scr-result').classList.add('hidden');$('#scr-ref').classList.remove('hidden')};
+$('#refBack').onclick=$('#btnHome').onclick;
+$('#refSearch').oninput=renderRef;
+$$('[data-f]').forEach(b=>b.onclick=()=>{refFilter=b.dataset.f;renderRef()});
+$('#btnNext').onclick=next;
+$('#btnFinish').onclick=()=>finishExam(); $('#btnFinishTop').onclick=()=>finishExam();
+$('#btnAnswer').onclick=()=>{if(!$('#btnAnswer').disabled)check()};
+$('#btnGiveup').onclick=()=>{if(confirm('Показать правильный ответ? Вопрос будет засчитан как ошибка.')){picked=new Set([-1]);check()}};
+$('#btnPrev').onclick=prev;
+$('#btnCheck').onclick=check;
+$('#inp').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checked?next():check()}});
+$('#rAgain').onclick=()=>start(mode,order.slice());
+$('#rWrong').onclick=()=>{if(!S.wrong.length){alert('Ошибок нет 🎉');return}start('wrong',S.wrong.slice())};
+$('#rHome').onclick=$('#btnHome').onclick;
+$('#btnReset').onclick=()=>{if(confirm('Сбросить весь прогресс и список ошибок?')){S={res:{},wrong:[],hist:[]};save();renderMenu();updChips()}};
+document.addEventListener('keydown',e=>{
+  if($('#scr-quiz').classList.contains('hidden'))return;
+  if(e.key==='Escape'){$('#btnHome').click();return}
+  if(document.activeElement&&document.activeElement.tagName==='INPUT')return;
+  if(e.key==='ArrowRight'||e.key==='Enter'){e.preventDefault();
+    if(checked||mode==='exam'){next();return}
+    const ba=$('#btnAnswer');
+    if(ba.classList.contains('hidden')){check();return}
+    if(!ba.disabled)check();
+    return}
+  if(e.key==='ArrowLeft'){prev();return}
+  const n=parseInt(e.key,10);
+  if(n>=1&&n<=9){const b=$(`#qOpts .opt[data-k="${n-1}"]`);if(b)b.click()}
+});
+renderMenu();updChips();
+
+
+
+/* ================= 🪤 альтернативные формулировки ================= */
+const TRAPS=[
+{t:"Во время сеанса TCP целевое устройство отправляет номер подтверждения. Что означает этот номер?", a:"Следующий байт, который ожидает получить получатель", w:"Не «номер последнего полученного байта» и не «число полученных байтов» — именно СЛЕДУЮЩИЙ."},
+{t:"Какое преимущество IMAP перед POP? (вторая редакция)", a:"Позволяет обращаться к сообщениям с нескольких устройств", w:"В другой редакции: «сообщения хранятся на сервере, пока не удалены вручную». Оба варианта — про серверное хранение, а не про скачивание."},
+{t:"Преимущество оптоволокна перед медью", a:"Передаёт сигналы на гораздо большие расстояния", w:"Ловушки: «дешевле», «проще монтировать», «можно гнуть под острыми углами» — всё это как раз про медь."},
+{t:"Какие два шага нужны для включения SSH? / Какие ТРИ шага, если учётная запись уже создана?", a:"2 шага: hostname + ip domain-name, затем crypto key generate rsa. 3 шага: ip domain-name, ключи RSA, transport input ssh", w:"Смотри, что уже сказано в условии. «С нуля» → hostname + domain-name + учётная запись. «Учётка уже есть» → domain-name + ключи + transport input ssh."},
+{t:"Какие ТРИ шага конфигурации нужны для SSH (Модуль 16)?", a:"IP domain name + учётная запись пользователя + уникальное hostname", w:"Это третья редакция того же вопроса — без transport input ssh."},
+{t:"Как принимающий узел определяет начало и конец кадра? (редакция v7)", a:"Отправитель вставляет стартовые и стоповые биты ИЛИ биты преобразуются в заранее определённый код (преамбула + SFD)", w:"Если в вариантах есть «стартовые и стоповые биты» — это ключ v5.1/v6.0. Если вместо него «преобразует биты в заранее определённый код» — это ключ v7. Варианты «отправляет beacon», «определяет по физическому адресу», «внеполосный сигнал» — всегда ✗."},
+{t:"Какое поле кадра Ethernet используется для проверки целостности / что делает FCS?", a:"FCS (трейлер) — обнаружение ошибок; кадр с ошибкой отбрасывается", w:"Не исправление ошибок, а именно обнаружение. Исправлением занимается TCP выше."},
+{t:"Какой метод коммутации начинает пересылку сразу после чтения MAC-адреса назначения?", a:"fast-forward", w:"fragment-free читает первые 64 байта. store-and-forward читает кадр ЦЕЛИКОМ и проверяет CRC. Оба последних — разновидности cut-through."},
+{t:"Какая команда показывает статус интерфейсов и их IP-адреса?", a:"show ip interface brief", w:"show version → версия IOS, аптайм, config register. show mac-address-table → MAC-таблица коммутатора. show ip route → таблица маршрутизации. ipconfig → только на ПК Windows."},
+{t:"Какая команда показывает значение регистра конфигурации?", a:"show version", w:"В конце вывода, строка «Configuration register is 0x2102»."},
+{t:"Какая команда на ПК Windows показывает IP, маску, шлюз и DNS?", a:"ipconfig /all (кратко ipconfig)", w:"route print / netstat -r → маршруты; tracert → путь; arp -a → ARP-таблица; ipconfig /displaydns → кэш DNS; netstat -s → статистика протоколов."},
+{t:"Что означает успешный ping на 127.0.0.1 / ::1?", a:"Стек TCP/IP на самом хосте исправен", w:"НЕ означает доступность сети, шлюза или кабеля. Loopback никуда не выходит за пределы узла."},
+{t:"Какой PDU обрабатывается при деинкапсуляции на транспортном уровне?", a:"Сегмент", w:"На сетевом — пакет, на канальном — кадр, на физическом — биты. Смотри, какой уровень назван в вопросе."},
+{t:"Какая информация содержится в заголовке транспортного уровня?", a:"Номера портов источника и назначения", w:"IP-адреса — сетевой уровень, MAC-адреса — канальный. В заголовке UDP всего 4 поля: порт ист., порт назн., длина, контрольная сумма."},
+{t:"Какие три части у глобального одноадресного адреса IPv6?", a:"Global Routing Prefix + Subnet ID + Interface ID", w:"Ловушки: «MAC-адрес», «октет», «маска подсети». Префикс выдаёт провайдер, Subnet ID определяет организация, Interface ID — сам узел (часто из EUI-64)."},
+{t:"Какой тип адреса IPv6 назначается интерфейсу автоматически при включении IPv6?", a:"link-local (FE80::/10)", w:"Не loopback (::1 — он один на узел) и не unique local (FC00::/7 — назначается вручную/SLAAC для внутренней сети)."},
+{t:"Какие два типа одноадресных адресов IPv6?", a:"link-local и loopback", w:"Multicast, anycast и unicast — это ТРИ КЛАССА адресов, а не типы unicast. Broadcast в IPv6 нет вообще."},
+{t:"Какое поле заголовка IPv6 заставляет маршрутизаторы держать один путь для пакетов одного сеанса?", a:"Flow Label", w:"Traffic Class — приоритет (аналог DSCP), Next Header — какой протокол внутри. Вопрос часто путают с IPv4-полем Protocol."},
+{t:"Какие два устройства являются промежуточными?", a:"Маршрутизатор и коммутатор (+ беспроводной контроллер, IPS, межсетевой экран)", w:"Хост, сервер, принтер, IP-телефон — конечные устройства. Если в вариантах нет маршрутизатора/коммутатора — ищи wireless LAN controller или IPS."},
+{t:"Какие три характеристики многоадресной передачи?", a:"Один пакет — группе хостов; хосты должны присоединиться к группе; маршрутизаторы используют multicast для обмена маршрутами", w:"«Отправляется всем хостам» — это broadcast. «Требуется подтверждение от каждого» — неправда. Вариант про диапазон 224.0.0.0–224.0.0.255 тоже верен по факту — если он есть в списке, а чего-то из трёх выше нет, бери его."},
+{t:"Какие три IP-адреса являются частными?", a:"10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16", w:"169.254.0.0/16 — это APIPA/link-local, 100.64.0.0/14 — CGNAT, 239.0.0.0/8 — multicast, 127.0.0.0/8 — loopback. Частными НЕ являются."},
+{t:"Сколько адресов доступно хостам при маске /28? /27? /26? /24? /22?", a:"14 · 30 · 62 · 254 · 1022", w:"Формула: 2^(32−префикс) − 2. Если спрашивают «сколько всего адресов в подсети» — НЕ вычитай двойку (для /28 будет 16)."},
+{t:"Администратор хочет одну маску для всех сетей (телефоны 22, ПК 20, принтеры 2, сканеры 2)", a:"255.255.255.224 (/27)", w:"Считать по САМОЙ крупной сети: 22 хоста → 5 бит → 32 адреса. Не суммируй все устройства вместе!"},
+{t:"Дан сетевой адрес 192.168.5.0 и маска 255.255.255.224 — сколько адресов хостов НЕ используется?", a:"72 (в классической редакции — 3 подсети по 24 свободных адреса)", w:"В банке встречается и редакция с 192.168.99.0/26 — там ответ тоже 72. Считай: (полезных − занятых) × число подсетей."},
+{t:"Компания имеет 192.168.1.64/26 и хочет подсети на 18 и 10 хостов", a:"192.168.1.64/27 и 192.168.1.96/28", w:"/27 даёт 30 хостов (хватит на 18), /28 — 14 (хватит на 10). Ловушки: /28 для первой подсети (14 < 18) и /26 для второй (избыточно)."},
+{t:"Каков диапазон зарегистрированных портов? / динамических?", a:"1024–49151 / 49152–65535", w:"Well-known 0–1023. «Зарегистрированный порт запрашивают у IANA для конкретного приложения» — это тот же вопрос словами."},
+{t:"Какие три уровня OSI соответствуют прикладному уровню TCP/IP?", a:"Прикладной, представления, сеансовый", w:"В модели TCP/IP всего 4 уровня. Транспортный и сетевой — отдельные, их не выбирать."},
+{t:"Что такое Auto-MDIX?", a:"Функция, определяющая тип кабеля (прямой или перекрёстный) и автоматически настраивающая порт", w:"Это НЕ тип разъёма и НЕ тип коммутатора."},
+{t:"Какое утверждение о MAC-адресах верно? (две редакции)", a:"«Первые три байта — OUI производителя» ИЛИ «должны быть глобально уникальными»", w:"Обе редакции встречаются. Неверно: «реализуются программно», «32 бита», «маршрутизируются», «за это отвечает ISO» (правильно — IEEE)."},
+{t:"Какая аббревиатура обозначает политику использования личных устройств сотрудников?", a:"BYOD", w:"Поле ввода: пиши BYOD без пробелов и точек. Рядом в вариантах могут быть IoT, cloud, converged network."},
+{t:"Какой тип HTTP-сообщения используется для отправки данных формы? / для запроса только заголовков?", a:"POST / HEAD", w:"GET — запрос данных, PUT — загрузка/обновление ресурса. В поле ввода пиши GET заглавными."},
+{t:"Что произойдёт, если потеряется первый пакет передачи TFTP? / часть FTP-сообщения?", a:"TFTP: приложение повторит запрос (тайм-аут на прикладном уровне). FTP: потерянная ЧАСТЬ будет отправлена повторно (TCP)", w:"Ключевое различие: UDP-сервисы повторяют запрос сами, TCP повторяет только недостающий сегмент, а не всё сообщение."},
+{t:"Что произойдёт при потере пакетов во время приёма потокового видео?", a:"Устройство продолжит приём, возможна кратковременный сбой (подвисание)", w:"Стриминг идёт по UDP — повторная передача не запрашивается. Если в вопросе назван TCP — тогда «данные будут переотправлены»."},
+{t:"Окно TCP 1000 байт, сервер шлёт сегментами по 100 байт — сколько сегментов до подтверждения?", a:"10", w:"Окно ÷ размер сегмента. Редакция с окном 6000 и пакетом 1500 спрашивает «какой байт подтвердит сервер после двух пакетов» → 3001."},
+{t:"Команда login block-for 150 attempts 4 within 90 — что делает?", a:"Блокирует вход на 150 с после 4 неудачных попыток в течение 90 с", w:"Синтаксис: block-for <секунды блокировки> attempts <число попыток> within <окно>. В редакции «30 attempts 2 within 10» ответ: блокировка на 30 с после 2 неудач за 10 с."},
+{t:"Какая команда предотвращает показ паролей открытым текстом в конфигурации?", a:"service password-encryption", w:"Выполняется в режиме глобальной конфигурации. enable secret — шифрует только пароль enable (и хранит хэш), а не все пароли."},
+{t:"Что показывает команда show startup-config? / где лежит startup-config?", a:"Конфигурацию, сохранённую в NVRAM", w:"show running-config → RAM. Командой cd nvram: + dir можно посмотреть список файлов в NVRAM."},
+{t:"Каков результат соединения двух или более коммутаторов?", a:"Размер широковещательного домена увеличивается", w:"Коллизионных доменов становится больше (каждый порт — отдельный), а широковещательный — один на все порты. Уменьшить его может только маршрутизатор/VLAN."},
+{t:"Какие два размера кадра Ethernet?", a:"64 и 1518 байт", w:"Меньше 64 — runt, больше 1518 — jumbo/giant. Варианты 56, 128, 1024 — ловушки."},
+{t:"Какой адрес назначения в кадре ARP-запроса?", a:"FFFF.FFFF.FFFF", w:"Это MAC-броадкаст. 255.255.255.255 — IP-броадкаст (в том же пакете, но вопрос про кадр). 01-00-5E — начало multicast-MAC."},
+{t:"Что сопоставляет таблица ARP в коммутаторе?", a:"IP-адрес уровня 3 с MAC-адресом уровня 2", w:"Путают с MAC-таблицей коммутатора (MAC → порт). ARP — это всегда IP↔MAC."},
+{t:"Какая характеристика описывает облачные вычисления?", a:"Ресурсы доступны через Интернет без вложений в инфраструктуру, персонал и лицензии", w:"Рядом всегда три ловушки: IoT («умные приборы»), BYOD («личные устройства»), powerline («через электропроводку»)."},
+{t:"Что такое Интернет?", a:"Соединения через взаимосвязанные глобальные сети", w:"«Частная сеть организации с LAN и WAN» — это интранет. «Сеть поставщиков и клиентов организации» — экстранет."},
+];
+
+function renderTraps(){
+  const term=norm($('#trapSearch').value||'');
+  const list=TRAPS.filter(x=>!term||norm(x.t+' '+x.a+' '+x.w).includes(term));
+  $('#trapList').innerHTML=list.map((x,i)=>`
+    <div class="fb show ok" style="margin-bottom:10px;background:var(--card2);border-color:var(--line)">
+      <h4 style="color:var(--tx)">📌 ${esc(x.t)}</h4>
+      <p><b style="color:var(--ok)">→ ${esc(x.a)}</b></p>
+      <p style="color:var(--mut);font-size:13.5px">⚠️ ${esc(x.w)}</p>
+    </div>`).join('')||'<p class="sub">Ничего не найдено</p>';
+}
+$('#trapSearch').oninput=renderTraps;
+$('#trapBack').onclick=$('#btnHome').onclick;
+(function(){
+  const btn=document.createElement('button');
+  btn.className='mode';
+  btn.innerHTML='<b>\u{1F6A4} Альтернативные формулировки</b>'
+    +'<span>Та же тема в другой редакции — то, что может попасться вместо знакомых вопросов.</span>'
+    +'<span class="n">'+TRAPS.length+' пар</span>';
+  btn.onclick=()=>{renderTraps();showScr('scr-traps')};
+  const grid=document.createElement('div'); grid.className='grid g2'; grid.appendChild(btn);
+  const card=document.createElement('div'); card.className='card';
+  card.innerHTML='<h2 style="margin-top:0">Перед экзаменом</h2>';
+  card.appendChild(grid);
+  const ref=$('#catGrid');
+  ref.parentNode.insertBefore(card,ref);
+})();
+
+</script></body></html>
